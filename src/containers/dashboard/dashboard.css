@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.body-dashboard {
+    background-color: #f4f3f8;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.main-dashboard {
+    max-width: 90%;
+    margin: auto;
+    background-color: white;
+    min-height: 80vh;
+    width: 100%;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 10px;
+    padding-bottom: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+}
+.buttn {
+    background-color: blanchedalmond;
+    height: 100%;
+    display: flex;
+}

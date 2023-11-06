@@ -1,35 +1,45 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Routes, Route, Navigate, Outlet, useLocation } from 'react-router-dom';
+import Login from './containers/login/login';
+import Register from './containers/register/register';
+import Conversation from './containers/conversation/conversation';
+import './App.css';
+import Dashboard from './containers/dashboard/dashboard';
+import { useSelector } from 'react-redux';
+import { RootState } from './store/store';
+import PrepareImplementation from './containers/test/PrepareImplementation';
 
-function App() {
-  const [count, setCount] = useState(0)
+const AuthenticatedRoutes: React.FC = () => {
+    const isLoggedIn = useSelector(
+        (state: RootState) => state.authentication.loggedIn
+    );
+    const location = useLocation();
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    if (!isLoggedIn) {
+        return <Navigate to="/login" state={{ from: location }} replace />;
+    }
+
+    return <Outlet />;
+};
+
+function App(): JSX.Element {
+    /* jules.leroux */
+
+    return (
+        <>
+            <Routes>
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+
+                <Route element={<AuthenticatedRoutes />}>
+                    {/* <Route path="/dashboard" element={<Dashboard />} /> */}
+                    <Route path="/test" element={<PrepareImplementation />} />
+                    <Route path="/" element={<Conversation />} />
+                </Route>
+
+                <Route path="*" element={<h1>404</h1>} />
+            </Routes>
+        </>
+    );
 }
 
-export default App
+export default App;
