@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
-import Login from "./components/login/login";
-import Register from "./components/register/register";
+import Login from "./containers/login/login";
+import Register from "./containers/register/register";
 import './App.css'
 
 function App() {
