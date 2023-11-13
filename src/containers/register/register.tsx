@@ -42,12 +42,13 @@ function Register() {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(userRegisterForm),
-    })
+    }) // => Renvoie une Promise<Response>
       .then((response) => {
         if (response.ok) {
           return response.json();
         }
 
+        /* Toujours une erreur API */
         return response.json().then((err) => {
           if (err.data.error) {
             throw new Error(err.data.error);
@@ -57,12 +58,13 @@ function Register() {
             throw new Error(err.data.errors);
           }
         });
-      })
+      }) // Ici on a complété la Promise on doit gérer ce qu'on a reçu
       .then((data) => {
         console.log("user id : ", data.data.user.id);
         setSuccessMessage('Inscription réussie');
-      })
+      }) // En cas de réussite sur le premier then, on affiche la data reçue.
       .catch((error) => {
+        /* Pas toujours une erreur API exemple erreur cors */
         console.log(error);
 
         if (error.message) {
@@ -87,6 +89,10 @@ function Register() {
 
           {/* Register */}
           <p className='text-black bg-green-200 text-center'>{successMessage}</p>
+
+          {/* 
+            Utiliser le composant INPUT
+          */}
 
           <label className='label'>
             <span>Nom</span>

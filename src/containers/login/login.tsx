@@ -79,6 +79,11 @@ function Login() {
             <p className='text-black bg-red-200 text-center'>{errorMessage}</p>
 
             <form onSubmit={handleFormSubmit} className='registerForm'>
+
+              {/* 
+                Utiliser le composant INPUT
+              */}
+
               <label className="label">
                 <span className="label-text">Identifiant</span>
               </label>
