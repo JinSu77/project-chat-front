@@ -1,0 +1,19 @@
+.registerFormContainer {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+
+.registerFormSection {
+    background-color: #fff;
+    padding: 10px;
+    display: flex;
+    border-radius: 30px;
+}
+
+h1 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #000;
+}
