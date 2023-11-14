@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 import './register.css';
 import IUserRegisterForm from '../../interfaces/auth/IUserRegisterForm';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import useApiFetch, { FetchProps } from '../../hooks/useApiFetch';
 
 function Register(): JSX.Element {
     const [email, setEmail] = useState<string>('');
@@ -12,6 +13,7 @@ function Register(): JSX.Element {
     const [username, setUsername] = useState<string>('');
     const [successMessage, setSuccessMessage] = useState<string>('');
     const [errorMessage, setErrorMessage] = useState<string>('');
+    const [fetchData, { data, error, isLoading }] = useApiFetch();
     const userRegisterForm: IUserRegisterForm = {
         email: '',
         firstName: '',
@@ -20,7 +22,21 @@ function Register(): JSX.Element {
         username: '',
     };
 
-    function handleFormSubmit(event: React.FormEvent<HTMLFormElement>): void {
+    useEffect(() => {
+        console.log('[Register] Activation useEffect');
+
+        if (data) {
+            setSuccessMessage(
+                'Inscription réussie, vous pouvez retourner à la page de connexion.'
+            );
+        }
+
+        return () => {};
+    }, [data, error]);
+
+    const handleFormSubmit = async (
+        event: React.FormEvent<HTMLFormElement>
+    ): Promise<void> => {
         event.preventDefault();
         setSuccessMessage('');
         setErrorMessage('');
@@ -36,42 +52,17 @@ function Register(): JSX.Element {
         userRegisterForm.password = password;
         userRegisterForm.username = username;
 
-        fetch('http://localhost:8000/auth/register', {
+        const fetchProps: FetchProps = {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(userRegisterForm),
-        }) // => Renvoie une Promise<Response>
-            .then((response) => {
-                if (response.ok) {
-                    return response.json();
-                }
+            url: 'http://localhost:8000/auth/register',
+            body: { ...userRegisterForm },
+        };
 
-                /* Toujours une erreur API */
-                return response.json().then((err) => {
-                    if (err.data.error) {
-                        throw new Error(err.data.error);
-                    }
-
-                    if (err.data.errors) {
-                        throw new Error(err.data.errors);
-                    }
-                });
-            }) // Ici on a complété la Promise on doit gérer ce qu'on a reçu
-            .then((data) => {
-                console.log('user id : ', data.data.user.id);
-                setSuccessMessage('Inscription réussie');
-            }) // En cas de réussite sur le premier then, on affiche la data reçue.
-            .catch((error) => {
-                /* Pas toujours une erreur API exemple erreur cors */
-                console.log(error);
-
-                if (error.message) {
-                    setErrorMessage(error.message);
-                }
-            });
-    }
+        await fetchData(fetchProps);
+    };
 
     return (
         <>
@@ -88,6 +79,30 @@ function Register(): JSX.Element {
                         <p className="text-black bg-green-200 text-center">
                             {successMessage}
                         </p>
+
+                        {isLoading === false && (
+                            <p className="text-black bg-green-200 text-center">
+                                loading : {isLoading.toString()}
+                            </p>
+                        )}
+
+                        {isLoading === true && (
+                            <p className="text-black bg-red-200 text-center">
+                                loading : {isLoading.toString()}
+                            </p>
+                        )}
+
+                        {error && (
+                            <p className="text-black bg-red-200 text-center">
+                                {error}
+                            </p>
+                        )}
+
+                        {errorMessage && (
+                            <p className="text-black bg-red-400 text-center mt-5 max-w-xs">
+                                {errorMessage}
+                            </p>
+                        )}
 
                         {/* 
             Utiliser le composant INPUT
@@ -186,10 +201,6 @@ function Register(): JSX.Element {
                             minLength={4}
                             required
                         />
-
-                        <p className="text-black bg-red-400 text-center mt-5 max-w-xs">
-                            {errorMessage}
-                        </p>
 
                         <button className="btn btn-primary mt-2">
                             Register

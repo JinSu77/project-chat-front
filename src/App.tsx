@@ -6,6 +6,16 @@ import Dashboard from './containers/dashboard/dashboard';
 import { useSelector } from 'react-redux';
 import { RootState } from './store/store';
 
+const UnAuthenticatedRoute: React.FC = () => {
+    const token = useSelector((state: RootState) => state.authentication.token);
+
+    if (token) {
+        return <Navigate to="/dashboard" replace={true} />;
+    }
+
+    return <Outlet />;
+};
+
 const AuthenticatedRoute: React.FC = () => {
     const token = useSelector((state: RootState) => state.authentication.token);
 
@@ -20,14 +30,13 @@ function App(): JSX.Element {
     return (
         <>
             <Routes>
-                <Route path="/" element={<Login />} />
-                <Route path="/register" element={<Register />} />
+                <Route element={<UnAuthenticatedRoute />}>
+                    <Route path="/" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                </Route>
 
                 <Route element={<AuthenticatedRoute />}>
                     <Route path="/dashboard" element={<Dashboard />} />
-                    {/* 
-          Mettre les routes qui nécessitent une authentification ici
-        */}
                 </Route>
 
                 <Route path="*" element={<h1>404</h1>} />
