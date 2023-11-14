@@ -1,8 +1,8 @@
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../store/store";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
+import { Link } from 'react-router-dom';
 
-export default function Dashboard() {
+export default function Dashboard(): JSX.Element {
     const token = useSelector((state: RootState) => state.authentication.token);
     const dispatch = useDispatch();
 
@@ -16,12 +16,17 @@ export default function Dashboard() {
             </>
 
             <button className="btn btn-primary mt-2">
-                <Link to="/" className='text-white'>Login</Link>
-            </button>  
-            
-            <button className="btn btn-primary mt-2" onClick={() => dispatch({ type: 'authentication/logout' })}>
+                <Link to="/" className="text-white">
+                    Login
+                </Link>
+            </button>
+
+            <button
+                className="btn btn-primary mt-2"
+                onClick={() => dispatch({ type: 'authentication/logout' })}
+            >
                 Logout
             </button>
         </div>
-    )
+    );
 }
