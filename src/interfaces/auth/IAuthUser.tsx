@@ -1,7 +1,7 @@
-import { Role } from "../user/IUser";
+import { Role } from '../user/IUser';
 
 export interface IAuthUser {
-    data: AuthUser
+    data: AuthUser;
 }
 
 export interface AuthUser {
@@ -9,18 +9,17 @@ export interface AuthUser {
 }
 
 export interface User {
-    id:            number;
-    username:      string;
-    lastName:      string;
-    firstName:     string;
-    email:         string;
-    roles:         Role[];
+    id: number;
+    username: string;
+    lastName: string;
+    firstName: string;
+    email: string;
+    roles: Role[];
     conversations: UserConversation[];
 }
 
 export interface UserConversation {
-    id:   number;
+    id: number;
     name: string;
     type: string;
 }
-
