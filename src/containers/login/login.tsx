@@ -3,70 +3,48 @@ import './login.css';
 import '../../data/auth';
 import jauneBleuBlur from '../../assets/login/jaune-bleu-blur.png';
 import monsieurLogin from '../../assets/login/monsieur-login.png';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import React, { useEffect, useState } from 'react';
-import { RootState } from '../../store/store';
+import useApiFetch, { FetchProps } from '../../hooks/useApiFetch';
 
 function Login(): JSX.Element {
-    const navigate = useNavigate();
-    const token = useSelector((state: RootState) => state.authentication.token);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const [fetchData, { data, error, isLoading }] = useApiFetch();
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
-    const [successMessage, setSuccessMessage] = useState<string>('');
-    const [errorMessage, setErrorMessage] = useState<string>('');
 
     useEffect(() => {
         console.log('[Login] Activation useEffect');
 
-        if (token) {
-            navigate('/dashboard', { replace: true });
+        if (data && data.token) {
+            dispatch({ type: 'authentication/login', payload: data.token });
+
+            navigate('/dashboard');
         }
 
         return () => {};
-    }, [token, navigate]);
+    }, [data, dispatch, navigate]);
 
-    function handleFormSubmit(event: React.FormEvent<HTMLFormElement>): void {
+    const handleFormSubmit = async (
+        event: React.FormEvent<HTMLFormElement>
+    ): Promise<void> => {
         event.preventDefault();
-        setSuccessMessage('');
-        setErrorMessage('');
 
-        fetch('http://localhost:8000/auth/login', {
+        const fetchProps: FetchProps = {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ username, password }),
-        })
-            .then((response) => {
-                if (response.ok) {
-                    return response.json();
-                }
+            url: 'http://localhost:8000/auth/login',
+            body: {
+                username,
+                password,
+            },
+        };
 
-                return response.json().then((err) => {
-                    if (err.data.error) {
-                        throw new Error(err.data.error);
-                    }
-
-                    if (err.data.errors) {
-                        throw new Error(err.data.errors);
-                    }
-                });
-            })
-            .then((data) => {
-                dispatch({
-                    type: 'authentication/login',
-                    payload: data.data.token,
-                });
-            })
-            .catch((error) => {
-                console.log(error);
-
-                if (error.message) {
-                    setErrorMessage(error.message);
-                }
-            });
-    }
+        await fetchData(fetchProps);
+    };
 
     return (
         <div className="login-body">
@@ -76,12 +54,23 @@ function Login(): JSX.Element {
                         <h1 className="text-5xl">Connectez-vous</h1>
 
                         {/* Login */}
-                        <p className="text-black bg-green-200 text-center">
-                            {successMessage}
-                        </p>
-                        <p className="text-black bg-red-200 text-center">
-                            {errorMessage}
-                        </p>
+                        {error && (
+                            <p className="text-black bg-red-200 text-center">
+                                {error}
+                            </p>
+                        )}
+
+                        {isLoading === false && (
+                            <p className="text-black bg-green-200 text-center">
+                                loading : {isLoading.toString()}
+                            </p>
+                        )}
+
+                        {isLoading === true && (
+                            <p className="text-black bg-red-200 text-center">
+                                loading : {isLoading.toString()}
+                            </p>
+                        )}
 
                         <form
                             onSubmit={handleFormSubmit}
