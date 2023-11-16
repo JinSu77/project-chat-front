@@ -6,6 +6,8 @@ import monsieurLogin from '../../assets/login/monsieur-login.png';
 import { useDispatch } from 'react-redux';
 import React, { useEffect, useState } from 'react';
 import useApiFetch, { FetchProps } from '../../hooks/useApiFetch';
+import IUserLoginForm from '../../interfaces/auth/IUserLoginForm';
+import { User } from '../../interfaces/user/IUser';
 
 function Login(): JSX.Element {
     const dispatch = useDispatch();
@@ -15,10 +17,17 @@ function Login(): JSX.Element {
     const [password, setPassword] = useState<string>('');
 
     useEffect(() => {
-        console.log('[Login] Activation useEffect');
+        console.log('[Login] Activation main useEffect');
 
         if (data && data.token) {
-            dispatch({ type: 'authentication/login', payload: data.token });
+            dispatch({
+                type: 'authentication/login',
+                payload: {
+                    token: data.token as string,
+                    user: data.user as User,
+                    loggedIn: true,
+                },
+            });
 
             navigate('/dashboard');
         }
@@ -31,16 +40,18 @@ function Login(): JSX.Element {
     ): Promise<void> => {
         event.preventDefault();
 
+        const user: IUserLoginForm = {
+            username: username,
+            password: password,
+        };
+
         const fetchProps: FetchProps = {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             url: 'http://localhost:8000/auth/login',
-            body: {
-                username,
-                password,
-            },
+            body: user,
         };
 
         await fetchData(fetchProps);
