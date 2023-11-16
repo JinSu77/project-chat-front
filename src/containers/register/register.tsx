@@ -14,13 +14,6 @@ function Register(): JSX.Element {
     const [successMessage, setSuccessMessage] = useState<string>('');
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [fetchData, { data, error, isLoading }] = useApiFetch();
-    const userRegisterForm: IUserRegisterForm = {
-        email: '',
-        firstName: '',
-        lastName: '',
-        password: '',
-        username: '',
-    };
 
     useEffect(() => {
         console.log('[Register] Activation useEffect');
@@ -46,11 +39,13 @@ function Register(): JSX.Element {
             return;
         }
 
-        userRegisterForm.email = email;
-        userRegisterForm.firstName = firstName;
-        userRegisterForm.lastName = lastName;
-        userRegisterForm.password = password;
-        userRegisterForm.username = username;
+        const body: IUserRegisterForm = {
+            email: email,
+            firstName: firstName,
+            lastName: lastName,
+            password: password,
+            username: username,
+        };
 
         const fetchProps: FetchProps = {
             method: 'POST',
@@ -58,7 +53,7 @@ function Register(): JSX.Element {
                 'Content-Type': 'application/json',
             },
             url: 'http://localhost:8000/auth/register',
-            body: { ...userRegisterForm },
+            body: body,
         };
 
         await fetchData(fetchProps);

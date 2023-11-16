@@ -4,7 +4,7 @@ export type FetchProps = {
     url: string;
     method: string;
     headers: Record<string, string>;
-    body?: Record<string, unknown>;
+    body?: object;
 };
 
 export type FetchResult = {
@@ -35,7 +35,7 @@ const useApiFetch = (): [
             const response = await fetch(url, {
                 method,
                 headers,
-                body: body ? JSON.stringify(body) : undefined,
+                body: JSON.stringify(body),
             });
 
             const responseData = await response.json();
