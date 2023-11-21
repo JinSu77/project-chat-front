@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.BarreNav {
+    display: flex;
+    align-items: center;
+    padding: var(--navbar-padding, 0.5rem /* 8px */);
+    height: 4rem /* 64px */;
+    width: 100%;
+}
+:where(.BarreNav > *) {
+    display: inline-flex;
+    align-items: center;
+}
