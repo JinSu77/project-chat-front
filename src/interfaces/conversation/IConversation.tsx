@@ -7,7 +7,6 @@ export interface IConversation {
 
 export interface Conversation {
     id: number;
-    name: string;
     type: string;
     participants: Participant[];
     messages: Message[];
