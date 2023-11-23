@@ -1,6 +1,6 @@
 /* import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/store'; */
-import './converstation.css';
+import './conversation.css';
 import Nav from '../../components/nav/nav';
 import ChatBody from '../../components/chatbody/chatbody';
 

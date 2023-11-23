@@ -84,6 +84,9 @@
 .chat__msg {
     user-select: none;
 }
+.chat__content {
+    user-select: none;
+}
 
 .chat__item.other {
     flex-direction: row-reverse;

@@ -1,13 +1,14 @@
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './login.css';
 import '../../data/auth';
 import jauneBleuBlur from '../../assets/login/jaune-bleu-blur.png';
 import monsieurLogin from '../../assets/login/monsieur-login.png';
 import { useDispatch } from 'react-redux';
-import React, { useEffect, useState } from 'react';
 import useApiFetch, { FetchProps } from '../../hooks/useApiFetch';
 import IUserLoginForm from '../../interfaces/auth/IUserLoginForm';
 import { User } from '../../interfaces/user/IUser';
+import TextInput from '../../components/TextInput/TextInput';
 
 function Login(): JSX.Element {
     const dispatch = useDispatch();
@@ -87,18 +88,11 @@ function Login(): JSX.Element {
                             onSubmit={handleFormSubmit}
                             className="registerForm"
                         >
-                            {/* 
-                Utiliser le composant INPUT
-              */}
-
-                            <label className="label">
-                                <span className="label-text">Identifiant</span>
-                            </label>
-
-                            <input
+                            <TextInput
+                                label="Identifiant"
                                 type="text"
                                 placeholder="Entrez un username"
-                                className="input input-bordered w-full max-w-xs rounded-xl"
+                                value={username}
                                 onChange={(event) =>
                                     setUsername(event.target.value)
                                 }
@@ -106,14 +100,11 @@ function Login(): JSX.Element {
                                 required
                             />
 
-                            <label className="label">
-                                <span className="label-text">Mot de passe</span>
-                            </label>
-
-                            <input
+                            <TextInput
+                                label="Mot de passe"
                                 type="password"
                                 placeholder="Entrez un mot de passe"
-                                className="input input-bordered w-full max-w-xs bg- rounded-xl"
+                                value={password}
                                 onChange={(event) =>
                                     setPassword(event.target.value)
                                 }
