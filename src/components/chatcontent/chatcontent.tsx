@@ -2,7 +2,7 @@ import React, { useState, createRef, useEffect } from 'react';
 import './chatcontent.css';
 import Avatar from '../chatlist/avatar';
 import ChatItem from './chatitem';
-//import { FaPaperPlane } from 'react-icons/fa';
+import { FaPaperPlane } from 'react-icons/fa';
 
 interface ChatContentProps {}
 
@@ -90,7 +90,7 @@ const ChatContent: React.FC<ChatContentProps> = () => {
                         value={msg}
                     />
                     <button className="btnSendMsg" id="sendMsgBtn">
-                        {/* <FaPaperPlane /> */}
+                        <FaPaperPlane />
                     </button>
                 </div>
             </div>

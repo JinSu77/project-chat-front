@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-// import { FaSearch } from 'react-icons/fa';
+import { FaSearch } from 'react-icons/fa';
 import ChatListItems from './chatlistitem';
 import './chatlist.css';
 
@@ -108,7 +108,7 @@ const ChatList: React.FC = () => {
             <div className="chatList__search">
                 <div className="search_wrap">
                     <input type="text" placeholder="Search Here" required />
-                    <button className="search-btn">{/* <FaSearch /> */}</button>
+                    <button className="search-btn">{<FaSearch />}</button>
                 </div>
             </div>
             <div className="chatlist__items">
