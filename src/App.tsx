@@ -35,10 +35,11 @@ function App(): JSX.Element {
                     <Route path="/" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/conversation" element={<Conversation />} />
-                    <Route path="/dashboard" element={<Dashboard />} />
                 </Route>
 
-                <Route element={<AuthenticatedRoute />}></Route>
+                <Route element={<AuthenticatedRoute />}>
+                    <Route path="/dashboard" element={<Dashboard />} />
+                </Route>
                 <Route path="*" element={<h1>404</h1>} />
             </Routes>
         </>
