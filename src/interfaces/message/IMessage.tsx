@@ -1,9 +1,4 @@
 export interface IMessage {
-    data: {
-        message: Message;
-    };
-}
-export interface Message {
     id: number;
     content: string;
     channel_id: number | null;

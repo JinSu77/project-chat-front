@@ -1,22 +1,8 @@
-import { Message } from '../message/IMessage';
-import { Role } from '../user/IUser';
-
+import { IMessage } from '../message/IMessage';
+import { IConversationParticipant } from './IConversationParticipant';
 export interface IConversation {
-    conversation: Conversation;
-}
-
-export interface Conversation {
     id: number;
     type: string;
-    participants: Participant[];
-    messages: Message[];
-}
-
-export interface Participant {
-    id: number;
-    username: string;
-    lastName: string;
-    firstName: string;
-    email: string;
-    roles: Role[];
+    participants: IConversationParticipant[];
+    messages: IMessage[];
 }
