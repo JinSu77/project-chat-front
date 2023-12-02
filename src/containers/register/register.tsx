@@ -24,7 +24,7 @@ function Register(): JSX.Element {
     useEffect(() => {
         console.log('[Register] Activation useEffect');
         if (isLoggedIn) {
-            navigate('/test', { replace: true });
+            navigate('/', { replace: true });
 
             return () => {};
         }

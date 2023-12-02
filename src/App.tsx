@@ -3,7 +3,6 @@ import Login from './containers/login/login';
 import Register from './containers/register/register';
 import Conversation from './containers/conversation/conversation';
 import './App.css';
-import Dashboard from './containers/dashboard/dashboard';
 import { useSelector } from 'react-redux';
 import { RootState } from './store/store';
 import PrepareImplementation from './containers/test/PrepareImplementation';

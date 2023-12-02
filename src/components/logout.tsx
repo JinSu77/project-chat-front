@@ -9,6 +9,7 @@ export default function Logout(): JSX.Element {
         dispatch({ type: 'authentication/resetToDefault' });
         dispatch({ type: 'channels/resetToDefault' });
         dispatch({ type: 'conversations/resetToDefault' });
+        dispatch({ type: 'chatList/resetToDefault' });
 
         return navigate('/login');
     };

@@ -1,4 +1,5 @@
 import { AnyAction } from '@reduxjs/toolkit';
+import fillChatListStore from './fillChatListStore';
 
 const fillChannelStore = async ({
     dispatch,
@@ -22,6 +23,8 @@ const fillChannelStore = async ({
             type: 'channels/setChannels',
             payload: json.data,
         });
+
+        await fillChatListStore({ dispatch, json, type: 'channels' });
     }
 };
 

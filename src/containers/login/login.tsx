@@ -9,6 +9,9 @@ import useApiFetch, { FetchProps } from '../../hooks/useApiFetch';
 import IUserLoginForm from '../../interfaces/auth/IUserLoginForm';
 import TextInput from '../../components/TextInput/TextInput';
 import { RootState } from '../../store/store';
+import fillChannelStore from '../../functions/fillChannelStore';
+import fillConversationStore from '../../functions/fillConversationStore';
+import { IUser } from '../../interfaces/user/IUser';
 
 function Login(): JSX.Element {
     const dispatch = useDispatch();
@@ -23,7 +26,7 @@ function Login(): JSX.Element {
     useEffect(() => {
         console.log('[Login] Activation main useEffect');
         if (isLoggedIn) {
-            navigate('/test', { replace: true });
+            navigate('/', { replace: true });
 
             return () => {};
         }
@@ -38,7 +41,17 @@ function Login(): JSX.Element {
                 },
             });
 
-            navigate('/test');
+            const fetchAndFillStore = async (): Promise<void> => {
+                const token = data.token as string;
+                const userId = (data.user as IUser).id;
+
+                await fillChannelStore({ dispatch, token });
+                await fillConversationStore({ dispatch, token, userId });
+            };
+
+            fetchAndFillStore();
+
+            navigate('/');
 
             return () => {};
         }

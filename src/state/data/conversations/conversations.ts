@@ -1,7 +1,7 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit';
-import { IConversation } from '../../interfaces/conversation/IConversation';
-import { RootState } from '../../store/store';
-import { IMessage } from '../../interfaces/message/IMessage';
+import { IConversation } from '../../../interfaces/conversation/IConversation';
+import { RootState } from '../../../store/store';
+import { IMessage } from '../../../interfaces/message/IMessage';
 
 const initialState: { data: IConversation[] } = {
     data: [],

@@ -1,93 +1,27 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import ChatListItems from './chatlistitem';
 import './chatlist.css';
-
-interface ChatUser {
-    id: number;
-    name: string;
-    active: boolean;
-    isOnline: boolean;
-}
-
-/* interface ChatListState {
-    allChats: ChatUser[];
-} */
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
 
 const ChatList: React.FC = () => {
-    const allChatUsers: ChatUser[] = [
-        {
-            id: 1,
-            name: 'Tom bonnet',
-            active: true,
-            isOnline: true,
-        },
-        {
-            id: 2,
-            name: 'Tom bonnet',
-            active: false,
-            isOnline: false,
-        },
-        {
-            id: 3,
-            name: 'Tom bonnet',
-            active: false,
-            isOnline: false,
-        },
-        {
-            id: 4,
-            name: 'Tom bonnet',
-            active: false,
-            isOnline: true,
-        },
-        {
-            id: 5,
-            name: 'Tom bonnet',
-            active: false,
-            isOnline: false,
-        },
-        {
-            id: 6,
-            name: 'Tom bonnet',
-            active: false,
-            isOnline: true,
-        },
-        {
-            id: 7,
-            name: 'Tom bonnet',
+    const conversation = useSelector((state: RootState) => state.chatList.data);
+    const type = useSelector((state: RootState) => state.chatList.type);
 
-            active: false,
-            isOnline: true,
-        },
-        {
-            id: 8,
-            name: 'Tom bonnet',
-            active: false,
-            isOnline: false,
-        },
-        {
-            id: 9,
-            name: 'Tom bonnet',
-            active: false,
-            isOnline: true,
-        },
-        {
-            id: 10,
-            name: 'Tom bonnet',
-            active: false,
-            isOnline: true,
-        },
-    ];
+    useEffect(() => {
+        console.log('[ChatList] Activation main useEffect');
 
-    const [state, setState] = useState({
-        allChats: allChatUsers,
-    });
+        console.log('Conversation', conversation.length);
+        console.log('Type', type);
+    }, [conversation, type]);
 
     return (
         <div className="main__chatlist">
             <button className="btn">
                 <span>+ New conversation</span>
             </button>
+
             <div className="chatlist__heading">
                 <h2>Chats</h2>
                 <button className="btn-nobg">
@@ -101,12 +35,12 @@ const ChatList: React.FC = () => {
                 </div>
             </div>
             <div className="chatlist__items">
-                {state.allChats.map((item, index) => (
+                {conversation.map((item, index) => (
                     <ChatListItems
-                        name={item.name}
-                        key={item.id}
                         animationDelay={index + 1}
-                        image={'https://i.pravatar.cc/?img=' + item.id}
+                        image={'https://i.pravatar.cc/?img=' + index}
+                        item={item}
+                        key={index}
                     />
                 ))}
             </div>
