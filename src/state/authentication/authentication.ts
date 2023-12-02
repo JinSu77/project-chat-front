@@ -18,23 +18,16 @@ export const authenticationSlice = createSlice({
     name: 'authentication',
     initialState,
     reducers: {
-        login: (
-            state: AuthenticationState,
-            action: PayloadAction<AuthenticationState>
-        ) => {
-            state.loggedIn = true;
-            state.token = action.payload.token;
-            state.user = action.payload.user;
+        login: (state, action: PayloadAction<AuthenticationState>) => {
+            return {
+                ...state,
+                ...action.payload,
+            };
         },
-        logout: (state: AuthenticationState) => {
-            state.loggedIn = false;
-            state.token = null;
-            state.user = null;
-            return state;
-        },
+        resetToDefault: () => initialState,
     },
 });
 
-export const { login, logout } = authenticationSlice.actions;
+export const { login, resetToDefault } = authenticationSlice.actions;
 
 export default authenticationSlice.reducer;
