@@ -14,10 +14,7 @@ const UserProfile: React.FC = () => {
         <div className="main__userprofile">
             <div className="profile__card user__profile__image">
                 <div className="profile__image">
-                    <img
-                        src={avatar_default}
-                        alt="Profile"
-                    />
+                    <img src={avatar_default} alt="Profile" />
                 </div>
                 <h4>Tom Bonnet</h4>
                 <p>Etudiant en informatique</p>
