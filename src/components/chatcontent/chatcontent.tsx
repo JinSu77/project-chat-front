@@ -3,6 +3,7 @@ import './chatcontent.css';
 import Avatar from '../chatlist/avatar';
 import ChatItem from './chatitem';
 import { FaPaperPlane } from 'react-icons/fa';
+import avatar_default from '../../assets/avatar_default.jpg';
 
 interface ChatContentProps {}
 
@@ -53,7 +54,7 @@ const ChatContent: React.FC<ChatContentProps> = () => {
             <div className="content__header">
                 <div className="blocks">
                     <div className="current-chatting-user">
-                        <Avatar image="../../assets/login/profilphoto.jpg" />
+                        <Avatar image={avatar_default} />
                         <p>Tom Bonnet</p>
                     </div>
                 </div>

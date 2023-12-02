@@ -73,7 +73,7 @@ function Register(): JSX.Element {
     return (
         <>
             <button className="btn btn-primary">
-                <Link to="/">Login</Link>
+                <Link to="/login">Login</Link>
             </button>
 
             <div className="registerFormContainer">
@@ -215,7 +215,7 @@ function Register(): JSX.Element {
 
                         <p>
                             Déjà un compte ? Clique{' '}
-                            <Link to="/" className="text-sky-700 ">
+                            <Link to="/login" className="text-sky-700 ">
                                 ici
                             </Link>
                         </p>

@@ -15,23 +15,25 @@ const AuthenticatedRoutes: React.FC = () => {
     const location = useLocation();
 
     if (!isLoggedIn) {
-        return <Navigate to="/" state={{ from: location }} replace />;
+        return <Navigate to="/login" state={{ from: location }} replace />;
     }
 
     return <Outlet />;
 };
 
 function App(): JSX.Element {
+    /* jules.leroux */
+
     return (
         <>
             <Routes>
-                <Route path="/" element={<Login />} />
+                <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-                <Route path="/conversation" element={<Conversation />} />
 
                 <Route element={<AuthenticatedRoutes />}>
-                    <Route path="/dashboard" element={<Dashboard />} />
+                    {/* <Route path="/dashboard" element={<Dashboard />} /> */}
                     <Route path="/test" element={<PrepareImplementation />} />
+                    <Route path="/" element={<Conversation />} />
                 </Route>
 
                 <Route path="*" element={<h1>404</h1>} />

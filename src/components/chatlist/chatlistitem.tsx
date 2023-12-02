@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Avatar from './avatar';
+import avatar_default from '../../assets/avatar_default.jpg';
 
 interface ChatListItemProps {
     animationDelay: number;
@@ -25,7 +26,7 @@ const ChatListItem: React.FC<ChatListItemProps> = ({
             onClick={selectChat}
             className={`chatlist__item ${isActive ? 'active' : ''}`}
         >
-            <Avatar image={image ? image : 'http://placehold.it/80x80'} />
+            <Avatar image={image ? image : avatar_default} />
 
             <div className="userMeta">
                 <p>{name}</p>

@@ -1,5 +1,6 @@
 import React from 'react';
 import './userprofile.css';
+import avatar_default from '../../assets/avatar_default.jpg';
 
 const UserProfile: React.FC = () => {
     const toggleInfo = (e: React.MouseEvent<HTMLDivElement>): void => {
@@ -14,23 +15,17 @@ const UserProfile: React.FC = () => {
             <div className="profile__card user__profile__image">
                 <div className="profile__image">
                     <img
-                        src="../../assets/login/profilphoto.jpg"
+                        src={avatar_default}
                         alt="Profile"
                     />
                 </div>
                 <h4>Tom Bonnet</h4>
-                <p>Suceur de queue professionel</p>
+                <p>Etudiant en informatique</p>
             </div>
             <div className="profile__card">
                 <div className="card__header" onClick={toggleInfo}>
-                    <h4>Information</h4>
+                    <h4>Mes infos :</h4>
                     <i className="fa fa-angle-down"></i>
-                </div>
-                <div className="card__content">
-                    Je peut te le faire dans tout les sens, en 69,en faisant le
-                    poireau , sous la table , sous le lit , sous ton père{' '}
-                    <br></br>
-                    Contacte toi si interréssé
                 </div>
             </div>
         </div>

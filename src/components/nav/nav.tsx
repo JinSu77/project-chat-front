@@ -1,5 +1,6 @@
 import logo from '../../assets/login/logo-chat.png';
 import './nav.css';
+
 export default function Nav(): JSX.Element {
     return (
         <div className="nav">
