@@ -3,10 +3,10 @@ import { RootState } from '../../store/store';
 import '../dashboard/dashboard.css';
 import { useEffect, useRef } from 'react';
 import { IMessage } from '../../interfaces/message/IMessage';
-import { selectMessagesByChannelId } from '../../state/channels/channels';
+import { selectMessagesByChannelId } from '../../state/data/channels/channels';
 import fillChannelStore from '../../functions/fillChannelStore';
 import fillConversationStore from '../../functions/fillConversationStore';
-import { selectMessagesByConversationId } from '../../state/conversations/conversations';
+import { selectMessagesByConversationId } from '../../state/data/conversations/conversations';
 import Logout from '../../components/logout';
 
 export default function PrepareImplementation(): JSX.Element {

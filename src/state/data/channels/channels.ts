@@ -1,7 +1,7 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit';
-import { IChannel } from '../../interfaces/channel/IChannel';
-import { RootState } from '../../store/store';
-import { IMessage } from '../../interfaces/message/IMessage';
+import { IChannel } from '../../../interfaces/channel/IChannel';
+import { RootState } from '../../../store/store';
+import { IMessage } from '../../../interfaces/message/IMessage';
 
 const initialState: { data: IChannel[] } = {
     data: [],

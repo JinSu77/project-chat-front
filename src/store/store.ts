@@ -1,7 +1,8 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import authenticationReducer from '../state/authentication/authentication';
-import channelsReducer from '../state/channels/channels';
-import conversationsReducer from '../state/conversations/conversations';
+import authenticationReducer from '../state/data/authentication/authentication';
+import chatListReducer from '../state/component/chatBody/chatList';
+import channelsReducer from '../state/data/channels/channels';
+import conversationsReducer from '../state/data/conversations/conversations';
 import storage from 'redux-persist/lib/storage';
 import { persistReducer, persistStore } from 'redux-persist';
 import thunk from 'redux-thunk';
@@ -13,6 +14,7 @@ const persistConfig = {
 
 const reducer = combineReducers({
     authentication: authenticationReducer,
+    chatList: chatListReducer,
     channels: channelsReducer,
     conversations: conversationsReducer,
 });
