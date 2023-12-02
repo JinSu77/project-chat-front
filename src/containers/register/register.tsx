@@ -1,8 +1,10 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './register.css';
 import IUserRegisterForm from '../../interfaces/auth/IUserRegisterForm';
 import React, { useEffect, useState } from 'react';
 import useApiFetch, { FetchProps } from '../../hooks/useApiFetch';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
 
 function Register(): JSX.Element {
     const [email, setEmail] = useState<string>('');
@@ -14,9 +16,18 @@ function Register(): JSX.Element {
     const [successMessage, setSuccessMessage] = useState<string>('');
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [fetchData, { data, error, isLoading }] = useApiFetch();
+    const isLoggedIn = useSelector(
+        (state: RootState) => state.authentication.loggedIn
+    );
+    const navigate = useNavigate();
 
     useEffect(() => {
         console.log('[Register] Activation useEffect');
+        if (isLoggedIn) {
+            navigate('/test', { replace: true });
+
+            return () => {};
+        }
 
         if (data) {
             setSuccessMessage(
@@ -25,7 +36,7 @@ function Register(): JSX.Element {
         }
 
         return () => {};
-    }, [data, error]);
+    }, [data, error, isLoggedIn, navigate]);
 
     const handleFormSubmit = async (
         event: React.FormEvent<HTMLFormElement>

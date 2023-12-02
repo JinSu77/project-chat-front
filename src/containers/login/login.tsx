@@ -4,11 +4,11 @@ import './login.css';
 import '../../data/auth';
 import jauneBleuBlur from '../../assets/login/jaune-bleu-blur.png';
 import monsieurLogin from '../../assets/login/monsieur-login.png';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import useApiFetch, { FetchProps } from '../../hooks/useApiFetch';
 import IUserLoginForm from '../../interfaces/auth/IUserLoginForm';
-import { User } from '../../interfaces/user/IUser';
 import TextInput from '../../components/TextInput/TextInput';
+import { RootState } from '../../store/store';
 
 function Login(): JSX.Element {
     const dispatch = useDispatch();
@@ -16,25 +16,35 @@ function Login(): JSX.Element {
     const [fetchData, { data, error, isLoading }] = useApiFetch();
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+    const isLoggedIn = useSelector(
+        (state: RootState) => state.authentication.loggedIn
+    );
 
     useEffect(() => {
         console.log('[Login] Activation main useEffect');
+        if (isLoggedIn) {
+            navigate('/test', { replace: true });
+
+            return () => {};
+        }
 
         if (data && data.token) {
             dispatch({
                 type: 'authentication/login',
                 payload: {
-                    token: data.token as string,
-                    user: data.user as User,
+                    token: data.token,
+                    user: data.user,
                     loggedIn: true,
                 },
             });
 
-            navigate('/dashboard');
+            navigate('/test');
+
+            return () => {};
         }
 
         return () => {};
-    }, [data, dispatch, navigate]);
+    }, [data, dispatch, isLoggedIn, navigate]);
 
     const handleFormSubmit = async (
         event: React.FormEvent<HTMLFormElement>
