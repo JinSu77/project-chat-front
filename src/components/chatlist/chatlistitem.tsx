@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import Avatar from './avatar';
 import avatar_default from '../../assets/avatar_default.jpg';
-import { IConversationAttributes } from '../../interfaces/conversation/IConversationAttributes';
-import { IChannelAttributes } from '../../interfaces/channel/IChannelAttributes';
 import { RootState } from '../../store/store';
 import { useSelector } from 'react-redux';
 import { ChatComponentType } from '../../state/component/chatComponent';
+import { IConversation } from '../../interfaces/conversation/IConversation';
+import { IChannel } from '../../interfaces/channel/IChannel';
 
 interface ChatListItemProps {
     animationDelay: number;
     active?: string;
     image?: string;
-    item: IConversationAttributes | IChannelAttributes;
+    item: IConversation | IChannel;
     itemType: ChatComponentType;
 }
 const ChatListItem: React.FC<ChatListItemProps> = ({
@@ -32,7 +32,7 @@ const ChatListItem: React.FC<ChatListItemProps> = ({
 
         if (itemName === '') {
             if (itemType === 'channels') {
-                const copyItem = item as IChannelAttributes;
+                const copyItem = item as IChannel;
 
                 setItemName(copyItem.name);
 
@@ -43,7 +43,7 @@ const ChatListItem: React.FC<ChatListItemProps> = ({
                 itemType === 'conversations' &&
                 typeof authUsername === 'string'
             ) {
-                const copyItem = item as IConversationAttributes;
+                const copyItem = item as IConversation;
 
                 const user = copyItem.participants.filter(
                     (participant) => participant.username !== authUsername

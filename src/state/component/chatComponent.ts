@@ -1,11 +1,11 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { IConversationAttributes } from '../../interfaces/conversation/IConversationAttributes';
-import { IChannelAttributes } from '../../interfaces/channel/IChannelAttributes';
+import { IConversation } from '../../interfaces/conversation/IConversation';
+import { IChannel } from '../../interfaces/channel/IChannel';
 
 export type ChatComponentType = 'conversations' | 'channels' | null;
 
 export interface ChatComponentState {
-    data: IConversationAttributes[] | IChannelAttributes[];
+    data: IConversation[] | IChannel[];
     type: ChatComponentType;
 }
 
