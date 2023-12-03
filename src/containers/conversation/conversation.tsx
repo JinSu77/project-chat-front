@@ -15,6 +15,9 @@ export default function Conversation(): JSX.Element {
     const token = useSelector((state: RootState) => state.authentication.token);
     const user = useSelector((state: RootState) => state.authentication.user);
     const channels = useSelector((state: RootState) => state.channels.data);
+    const conversations = useSelector(
+        (state: RootState) => state.conversations.data
+    );
     const dispatch = useDispatch();
     const hasFetched = useRef<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -54,8 +57,13 @@ export default function Conversation(): JSX.Element {
     );
 
     useEffect(() => {
-        setChatComponent(channels, 'channels');
-    }, [channels, setChatComponent]);
+        if (hasFetched.current && !isLoading) {
+            setChatComponent(channels, 'channels');
+            //setChatComponent(conversations, 'conversations');
+        }
+
+        return () => {};
+    }, [channels, conversations, setChatComponent, isLoading]);
 
     useEffect(() => {
         console.log('[Conversation] Activation main useEffect');

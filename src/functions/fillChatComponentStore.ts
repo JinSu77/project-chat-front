@@ -14,46 +14,20 @@ const fillChatComponentStore = async ({
     if (type === 'channels') {
         const channels = data as IChannel[];
 
-        const conversationsAttributes = channels.map((channel: IChannel) => {
-            return {
-                id: channel.id,
-                name: channel.name,
-            };
+        dispatch({
+            type: 'chatComponent/setChatComponent',
+            payload: {
+                data: channels,
+                type: type,
+            },
         });
+    } else if (type === 'conversations') {
+        const conversations = data as IConversation[];
 
         dispatch({
             type: 'chatComponent/setChatComponent',
             payload: {
-                data: conversationsAttributes,
-                type: type,
-            },
-        });
-    }
-
-    if (type === 'conversations') {
-        const conversations = data as IConversation[];
-
-        const formattedData = conversations.map(
-            (conversation: IConversation) => {
-                return {
-                    id: conversation.id,
-                    type: conversation.type,
-                    participants: conversation.participants.map(
-                        (participant) => {
-                            return {
-                                id: participant.id,
-                                username: participant.username,
-                            };
-                        }
-                    ),
-                };
-            }
-        );
-
-        dispatch({
-            type: 'chatComponent/setChatList',
-            payload: {
-                data: formattedData,
+                data: conversations,
                 type: type,
             },
         });
