@@ -5,18 +5,21 @@ import { IConversationAttributes } from '../../interfaces/conversation/IConversa
 import { IChannelAttributes } from '../../interfaces/channel/IChannelAttributes';
 import { RootState } from '../../store/store';
 import { useSelector } from 'react-redux';
+import { ChatComponentType } from '../../state/component/chatComponent';
 
 interface ChatListItemProps {
     animationDelay: number;
     active?: string;
     image?: string;
     item: IConversationAttributes | IChannelAttributes;
+    itemType: ChatComponentType;
 }
 const ChatListItem: React.FC<ChatListItemProps> = ({
     animationDelay,
     /*  active, */
     image,
     item,
+    itemType,
 }: ChatListItemProps) => {
     const [isActive, setIsActive] = useState<boolean>(false);
     const [itemName, setItemName] = useState<string>('');
@@ -25,26 +28,39 @@ const ChatListItem: React.FC<ChatListItemProps> = ({
     );
 
     useEffect(() => {
-        if ('name' in item) {
-            setItemName(item.name);
+        console.log('[ChatListItem] Activation main useEffect');
 
-            return () => {};
-        } else if (typeof authUsername === 'string') {
-            const user = item.participants.filter(
-                (participant) => participant.username !== authUsername
-            );
+        if (itemName === '') {
+            if (itemType === 'channels') {
+                const copyItem = item as IChannelAttributes;
 
-            if (user.length !== 0) {
-                setItemName(user[0].username);
+                setItemName(copyItem.name);
 
-                return () => {};
+                return;
             }
+
+            if (
+                itemType === 'conversations' &&
+                typeof authUsername === 'string'
+            ) {
+                const copyItem = item as IConversationAttributes;
+
+                const user = copyItem.participants.filter(
+                    (participant) => participant.username !== authUsername
+                );
+
+                if (user.length !== 0) {
+                    setItemName(user[0].username);
+
+                    return;
+                }
+            }
+
+            setItemName('Undefined');
         }
 
-        setItemName('undefined');
-
         return () => {};
-    }, [item, authUsername]);
+    }, [itemName, item, itemType, authUsername]);
 
     const selectChat = (): void => {
         setIsActive(true);

@@ -7,12 +7,8 @@ const fillConversationStore = async ({
 }: {
     dispatch: React.Dispatch<AnyAction>;
     token: string;
-    userId: number | undefined;
-}): Promise<void> => {
-    if (typeof userId !== 'number') {
-        return;
-    }
-
+    userId: number;
+}): Promise<boolean> => {
     const response = await fetch(
         `http://localhost:8000/users/${userId}/conversations`,
         {
@@ -31,7 +27,11 @@ const fillConversationStore = async ({
             type: 'conversations/setConversations',
             payload: json.data,
         });
+
+        return true;
     }
+
+    return false;
 };
 
 export default fillConversationStore;

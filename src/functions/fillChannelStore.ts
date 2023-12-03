@@ -1,5 +1,4 @@
 import { AnyAction } from '@reduxjs/toolkit';
-import fillChatListStore from './fillChatListStore';
 
 const fillChannelStore = async ({
     dispatch,
@@ -7,7 +6,7 @@ const fillChannelStore = async ({
 }: {
     dispatch: React.Dispatch<AnyAction>;
     token: string;
-}): Promise<void> => {
+}): Promise<boolean> => {
     const response = await fetch(`http://localhost:8000/channels`, {
         method: 'GET',
         headers: {
@@ -24,8 +23,10 @@ const fillChannelStore = async ({
             payload: json.data,
         });
 
-        await fillChatListStore({ dispatch, json, type: 'channels' });
+        return true;
     }
+
+    return false;
 };
 
 export default fillChannelStore;

@@ -6,8 +6,10 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 
 const ChatList: React.FC = () => {
-    const conversation = useSelector((state: RootState) => state.chatList.data);
-    const type = useSelector((state: RootState) => state.chatList.type);
+    const conversation = useSelector(
+        (state: RootState) => state.chatComponent.data
+    );
+    const type = useSelector((state: RootState) => state.chatComponent.type);
 
     useEffect(() => {
         console.log('[ChatList] Activation main useEffect');
@@ -40,6 +42,7 @@ const ChatList: React.FC = () => {
                         animationDelay={index + 1}
                         image={'https://i.pravatar.cc/?img=' + index}
                         item={item}
+                        itemType={type}
                         key={index}
                     />
                 ))}
