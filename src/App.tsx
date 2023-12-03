@@ -21,8 +21,6 @@ const AuthenticatedRoutes: React.FC = () => {
 };
 
 function App(): JSX.Element {
-    /* jules.leroux */
-
     return (
         <>
             <Routes>

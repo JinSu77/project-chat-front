@@ -1,6 +1,6 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import authenticationReducer from '../state/data/authentication/authentication';
-import chatListReducer from '../state/component/chatBody/chatList';
+import chatComponentReducer from '../state/component/chatComponent';
 import channelsReducer from '../state/data/channels/channels';
 import conversationsReducer from '../state/data/conversations/conversations';
 import storage from 'redux-persist/lib/storage';
@@ -14,7 +14,8 @@ const persistConfig = {
 
 const reducer = combineReducers({
     authentication: authenticationReducer,
-    chatList: chatListReducer,
+    chatComponent: chatComponentReducer,
+    //chatContent: chatContentReducer,
     channels: channelsReducer,
     conversations: conversationsReducer,
 });

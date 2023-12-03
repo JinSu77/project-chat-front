@@ -2,25 +2,19 @@ import { AnyAction } from '@reduxjs/toolkit';
 import { IConversation } from '../interfaces/conversation/IConversation';
 import { IChannel } from '../interfaces/channel/IChannel';
 
-const fillChatListStore = async ({
+const fillChatComponentStore = async ({
     dispatch,
-    json,
+    data,
     type,
 }: {
     dispatch: React.Dispatch<AnyAction>;
-    json: {
-        data:
-            | {
-                  channels: IChannel[];
-              }
-            | {
-                  conversations: IConversation[];
-              };
-    };
+    data: IChannel[] | IConversation[];
     type: 'conversations' | 'channels';
 }): Promise<void> => {
-    if (type === 'channels' && 'channels' in json.data) {
-        const formattedData = json.data.channels.map((channel: IChannel) => {
+    if (type === 'channels') {
+        const channels = data as IChannel[];
+
+        const conversationsAttributes = channels.map((channel: IChannel) => {
             return {
                 id: channel.id,
                 name: channel.name,
@@ -28,16 +22,18 @@ const fillChatListStore = async ({
         });
 
         dispatch({
-            type: 'chatList/setChatList',
+            type: 'chatComponent/setChatComponent',
             payload: {
-                data: formattedData,
+                data: conversationsAttributes,
                 type: type,
             },
         });
     }
 
-    if (type === 'conversations' && 'conversations' in json.data) {
-        const formattedData = json.data.conversations.map(
+    if (type === 'conversations') {
+        const conversations = data as IConversation[];
+
+        const formattedData = conversations.map(
             (conversation: IConversation) => {
                 return {
                     id: conversation.id,
@@ -55,7 +51,7 @@ const fillChatListStore = async ({
         );
 
         dispatch({
-            type: 'chatList/setChatList',
+            type: 'chatComponent/setChatList',
             payload: {
                 data: formattedData,
                 type: type,
@@ -64,4 +60,4 @@ const fillChatListStore = async ({
     }
 };
 
-export default fillChatListStore;
+export default fillChatComponentStore;
