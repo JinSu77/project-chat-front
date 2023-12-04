@@ -15,7 +15,6 @@ const persistConfig = {
 const reducer = combineReducers({
     authentication: authenticationReducer,
     chatComponent: chatComponentReducer,
-    //chatContent: chatContentReducer,
     channels: channelsReducer,
     conversations: conversationsReducer,
 });
