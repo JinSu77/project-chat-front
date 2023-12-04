@@ -21,7 +21,7 @@ function Login(): JSX.Element {
     );
 
     useEffect(() => {
-        console.log('[Login] Activation main useEffect');
+        console.log('[Login] UseEffect');
         if (isLoggedIn) {
             navigate('/', { replace: true });
 

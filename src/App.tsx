@@ -5,7 +5,6 @@ import Conversation from './containers/conversation/conversation';
 import './App.css';
 import { useSelector } from 'react-redux';
 import { RootState } from './store/store';
-import PrepareImplementation from './containers/test/PrepareImplementation';
 
 const AuthenticatedRoutes: React.FC = () => {
     const isLoggedIn = useSelector(
@@ -29,7 +28,6 @@ function App(): JSX.Element {
 
                 <Route element={<AuthenticatedRoutes />}>
                     {/* <Route path="/dashboard" element={<Dashboard />} /> */}
-                    <Route path="/test" element={<PrepareImplementation />} />
                     <Route path="/" element={<Conversation />} />
                 </Route>
 

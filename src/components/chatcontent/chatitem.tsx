@@ -1,38 +1,41 @@
 import React from 'react';
 import Avatar from '../chatlist/avatar';
+import { IMessage } from '../../interfaces/message/IMessage';
+import { RootState } from '../../store/store';
+import { useSelector } from 'react-redux';
+import './chatcontent.css';
 
 interface ChatItemProps {
-    msg: string;
     image: string;
     animationDelay: number;
-    id: number;
-    content: string;
-    conversation_id?: number;
-    user_id?: number;
-    created_at?: number;
-    received_at?: null;
-    channel?: null;
+    message: IMessage;
 }
 const ChatItem: React.FC<ChatItemProps> = ({
-    msg,
-    content,
     animationDelay,
     image,
-    id,
-    received_at,
-    created_at,
+    message,
 }: ChatItemProps) => {
+    const authenticatedUser = useSelector(
+        (state: RootState) => state.authentication.user
+    );
+
+    const isMyMessage = (): boolean => {
+        return message.user_id === authenticatedUser?.id;
+    };
+
     return (
         <div
             style={{ animationDelay: `0.${animationDelay}s` }}
-            className={`chat__item ${id ? id : ''}`}
+            className={`${
+                isMyMessage() === true ? 'chat__item' : 'chat__item other'
+            }`}
         >
             <div className="chat__item__content">
-                <div className="chat__msg">{msg}</div>
-                <div className="chat__content">{content}</div>
+                <div className="chat__content">{message.content}</div>
                 <div className="chat__meta">
-                    <span>{received_at}</span>
-                    <span>{created_at}</span>
+                    <p>{message.username}</p>
+                    <span>{message.created_at.toString()}</span>
+                    {/* <span>{message.received_at ? 'Reçu' : 'Envoyé'}</span>     */}
                 </div>
             </div>
             <Avatar image={image} />

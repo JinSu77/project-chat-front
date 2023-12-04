@@ -4,23 +4,16 @@ import Avatar from '../chatlist/avatar';
 import ChatItem from './chatitem';
 import { FaPaperPlane } from 'react-icons/fa';
 import avatar_default from '../../assets/avatar_default.jpg';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
+import { IMessage } from '../../interfaces/message/IMessage';
 
-interface ChatContentProps {}
-
-interface ChatItemData {
-    key: number;
-    image: string;
-    type: string;
-    msg: string;
-}
-
-const ChatContent: React.FC<ChatContentProps> = () => {
+const ChatContent: React.FC = () => {
     const messagesEndRef = createRef<HTMLDivElement>();
-
-    const [chatItems, setChatItems] = useState<ChatItemData[]>([]);
-
     const [msg, setMsg] = useState<string>('');
-
+    const messages: IMessage[] = useSelector(
+        (state: RootState) => state.chatComponent.messages
+    );
     const scrollToBottom = (): void => {
         if (messagesEndRef.current) {
             messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -28,7 +21,8 @@ const ChatContent: React.FC<ChatContentProps> = () => {
     };
 
     useEffect(() => {
-        window.addEventListener('keydown', (e) => {
+        console.log('[ChatContent] UseEffect');
+        /*         window.addEventListener('keydown', (e) => {
             if (e.keyCode === 13) {
                 if (msg !== '') {
                     const newChatItem: ChatItemData = {
@@ -41,9 +35,9 @@ const ChatContent: React.FC<ChatContentProps> = () => {
                     setMsg('');
                 }
             }
-        });
+        }); */
         scrollToBottom();
-    }, [chatItems, msg, scrollToBottom]);
+    }, [msg, scrollToBottom]);
 
     const onStateChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         setMsg(e.target.value);
@@ -67,13 +61,12 @@ const ChatContent: React.FC<ChatContentProps> = () => {
             </div>
             <div className="content__body">
                 <div className="chat__items">
-                    {chatItems.map((itm, index) => (
+                    {messages.map((message, index) => (
                         <ChatItem
                             animationDelay={index + 2}
-                            key={itm.key}
-                            user={itm.type ? itm.type : 'me'}
-                            msg={itm.msg}
-                            image={itm.image}
+                            key={index}
+                            image={avatar_default}
+                            message={message}
                         />
                     ))}
                     <div ref={messagesEndRef} />

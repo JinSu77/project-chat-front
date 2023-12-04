@@ -1,16 +1,17 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { IConversation } from '../../interfaces/conversation/IConversation';
-import { IChannel } from '../../interfaces/channel/IChannel';
+import { IMessage } from '../../interfaces/message/IMessage';
 
 export type ChatComponentType = 'conversations' | 'channels' | null;
 
 export interface ChatComponentState {
-    data: IConversation[] | IChannel[];
+    activeConversation: number;
+    messages: IMessage[];
     type: ChatComponentType;
 }
 
 const initialState: ChatComponentState = {
-    data: [],
+    activeConversation: 0,
+    messages: [],
     type: null,
 };
 
@@ -18,13 +19,25 @@ export const chatComponentSlice = createSlice({
     name: 'chatComponent',
     initialState,
     reducers: {
+        setActiveConversation: (
+            state,
+            action: PayloadAction<{
+                activeConversation: number;
+                messages: IMessage[];
+            }>
+        ) => {
+            return {
+                ...state,
+                activeConversation: action.payload.activeConversation,
+                messages: action.payload.messages,
+            };
+        },
         setChatComponent: (
             state,
             action: PayloadAction<ChatComponentState>
         ) => {
             return {
                 ...state,
-                data: action.payload.data,
                 type: action.payload.type,
             };
         },
@@ -32,6 +45,7 @@ export const chatComponentSlice = createSlice({
     },
 });
 
-export const { setChatComponent, resetToDefault } = chatComponentSlice.actions;
+export const { setActiveConversation, setChatComponent, resetToDefault } =
+    chatComponentSlice.actions;
 
 export default chatComponentSlice.reducer;

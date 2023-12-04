@@ -4,6 +4,7 @@ export interface IMessage {
     channel: IMessageChannel | null;
     conversation_id: number | null;
     user_id: number;
+    username: string;
     created_at: Date;
     received_at: Date | null;
 }

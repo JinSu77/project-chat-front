@@ -22,7 +22,7 @@ function Register(): JSX.Element {
     const navigate = useNavigate();
 
     useEffect(() => {
-        console.log('[Register] Activation useEffect');
+        console.log('[Register] UseEffect');
         if (isLoggedIn) {
             navigate('/', { replace: true });
 
