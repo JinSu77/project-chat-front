@@ -1,22 +1,35 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
-import ChatListItems from './chatlistitem';
 import './chatlist.css';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
+import { IConversation } from '../../interfaces/conversation/IConversation';
+import { IChannel } from '../../interfaces/channel/IChannel';
+import MapChatListItem from './mapChatListItem';
 
 const ChatList: React.FC = () => {
-    const conversation = useSelector(
-        (state: RootState) => state.chatComponent.data
+    const chatComponentType: string | null = useSelector(
+        (state: RootState) => state.chatComponent.type
     );
-    const type = useSelector((state: RootState) => state.chatComponent.type);
+    const conversations: IConversation[] = useSelector(
+        (state: RootState) => state.conversations.data
+    );
+    const channels: IChannel[] = useSelector(
+        (state: RootState) => state.channels.data
+    );
+    const [data, setData] = useState<IConversation[] | IChannel[]>([]);
 
     useEffect(() => {
-        console.log('[ChatList] Activation main useEffect');
+        console.log('[ChatList] UseEffect');
 
-        console.log('Conversation', conversation.length);
-        console.log('Type', type);
-    }, [conversation, type]);
+        if (chatComponentType === 'channels') {
+            setData(channels);
+        }
+
+        if (chatComponentType === 'conversations') {
+            setData(conversations);
+        }
+    }, [chatComponentType, conversations, channels]);
 
     return (
         <div className="main__chatlist">
@@ -37,15 +50,7 @@ const ChatList: React.FC = () => {
                 </div>
             </div>
             <div className="chatlist__items">
-                {conversation.map((item, index) => (
-                    <ChatListItems
-                        animationDelay={index + 1}
-                        image={'https://i.pravatar.cc/?img=' + index}
-                        item={item}
-                        itemType={type}
-                        key={index}
-                    />
-                ))}
+                <MapChatListItem data={data} />
             </div>
         </div>
     );
