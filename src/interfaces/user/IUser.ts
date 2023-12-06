@@ -1,4 +1,3 @@
-import { IConversation } from '../conversation/IConversation';
 import { IRole } from '../role/IRole';
 
 export interface IUser {
@@ -8,5 +7,4 @@ export interface IUser {
     firstName: string;
     email: string;
     roles: IRole[];
-    conversations: IConversation[];
 }

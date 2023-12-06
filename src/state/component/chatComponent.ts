@@ -7,12 +7,14 @@ export interface ChatComponentState {
     activeConversation: number;
     messages: IMessage[];
     type: ChatComponentType;
+    isLoading: boolean;
 }
 
 const initialState: ChatComponentState = {
     activeConversation: 0,
     messages: [],
     type: null,
+    isLoading: false,
 };
 
 export const chatComponentSlice = createSlice({
@@ -32,7 +34,7 @@ export const chatComponentSlice = createSlice({
                 messages: action.payload.messages,
             };
         },
-        setChatComponent: (
+        setChatComponentType: (
             state,
             action: PayloadAction<ChatComponentState>
         ) => {
@@ -41,11 +43,24 @@ export const chatComponentSlice = createSlice({
                 type: action.payload.type,
             };
         },
+        setChatComponentLoading: (
+            state,
+            action: PayloadAction<{ isLoading: boolean }>
+        ) => {
+            return {
+                ...state,
+                isLoading: action.payload.isLoading,
+            };
+        },
         resetToDefault: () => initialState,
     },
 });
 
-export const { setActiveConversation, setChatComponent, resetToDefault } =
-    chatComponentSlice.actions;
+export const {
+    setActiveConversation,
+    setChatComponentType,
+    setChatComponentLoading,
+    resetToDefault,
+} = chatComponentSlice.actions;
 
 export default chatComponentSlice.reducer;
