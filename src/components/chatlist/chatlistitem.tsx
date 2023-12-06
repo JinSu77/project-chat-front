@@ -5,6 +5,7 @@ import { RootState } from '../../store/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { IConversation } from '../../interfaces/conversation/IConversation';
 import { IChannel } from '../../interfaces/channel/IChannel';
+import fetchMessages from '../../hooks/fetchMessages';
 
 interface ChatListItemProps {
     animationDelay: number;
@@ -22,8 +23,12 @@ const ChatListItem: React.FC<ChatListItemProps> = ({
     const activeConversation = useSelector(
         (state: RootState) => state.chatComponent.activeConversation
     );
+    const channelComponentType = useSelector(
+        (state: RootState) => state.chatComponent.type
+    );
+    const token = useSelector((state: RootState) => state.authentication.token);
 
-    const selectChat = (): void => {
+    const selectChat = async (): Promise<void> => {
         if (activeConversation === item.id) {
             dispatch({
                 type: 'chatComponent/setActiveConversation',
@@ -35,13 +40,7 @@ const ChatListItem: React.FC<ChatListItemProps> = ({
             return;
         }
 
-        dispatch({
-            type: 'chatComponent/setActiveConversation',
-            payload: {
-                activeConversation: item.id,
-                messages: item.messages,
-            },
-        });
+        await fetchMessages(item.id, channelComponentType, dispatch, token);
     };
 
     return (
