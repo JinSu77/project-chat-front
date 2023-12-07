@@ -138,6 +138,7 @@ export default function Nav(): JSX.Element {
             type: 'chatComponent/setActiveConversation',
             payload: {
                 activeConversation: null,
+                activeConversationName: '',
                 messages: [],
             },
         });

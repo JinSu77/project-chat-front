@@ -5,6 +5,7 @@ export type ChatComponentType = 'conversations' | 'channels' | null;
 
 export interface ChatComponentState {
     activeConversation: number;
+    activeConversationName: string;
     messages: IMessage[];
     type: ChatComponentType;
     isLoading: boolean;
@@ -12,6 +13,7 @@ export interface ChatComponentState {
 
 const initialState: ChatComponentState = {
     activeConversation: 0,
+    activeConversationName: '',
     messages: [],
     type: null,
     isLoading: false,
@@ -25,18 +27,20 @@ export const chatComponentSlice = createSlice({
             state,
             action: PayloadAction<{
                 activeConversation: number;
+                activeConversationName: string;
                 messages: IMessage[];
             }>
         ) => {
             return {
                 ...state,
                 activeConversation: action.payload.activeConversation,
+                activeConversationName: action.payload.activeConversationName,
                 messages: action.payload.messages,
             };
         },
         setChatComponentType: (
             state,
-            action: PayloadAction<ChatComponentState>
+            action: PayloadAction<{ type: ChatComponentType }>
         ) => {
             return {
                 ...state,

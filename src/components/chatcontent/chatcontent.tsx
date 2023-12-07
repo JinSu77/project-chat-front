@@ -1,29 +1,35 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './chatcontent.css';
 import Avatar from '../chatlist/avatar';
-import { FaPaperPlane } from 'react-icons/fa';
 import avatar_default from '../../assets/avatar_default.jpg';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import { IMessage } from '../../interfaces/message/IMessage';
 import MapChatContent from './mapChatContent';
+import CreateMessage from '../createMessage';
 
 const ChatContent: React.FC = () => {
     const messages: IMessage[] = useSelector(
         (state: RootState) => state.chatComponent.messages
     );
-    const [msg, setMsg] = useState<string>('');
-    const onStateChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        setMsg(e.target.value);
-    };
+    const conversationName: string = useSelector(
+        (state: RootState) => state.chatComponent.activeConversationName
+    );
+    const activeConversation: number = useSelector(
+        (state: RootState) => state.chatComponent.activeConversation
+    );
 
     return (
         <div className="main__chatcontent">
             <div className="content__header">
                 <div className="blocks">
                     <div className="current-chatting-user">
-                        <Avatar image={avatar_default} />
-                        <p>Tom Bonnet</p>
+                        {conversationName !== '' && (
+                            <>
+                                <Avatar image={avatar_default} />
+                                <p>{conversationName}</p>
+                            </>
+                        )}
                     </div>
                 </div>
 
@@ -34,23 +40,10 @@ const ChatContent: React.FC = () => {
                 </div>
             </div>
 
-            <MapChatContent messages={messages} msg={msg} />
+            <MapChatContent messages={messages} />
 
             <div className="content__footer">
-                <div className="sendNewMessage">
-                    <button className="addFiles">
-                        <i className="fa fa-plus"></i>
-                    </button>
-                    <input
-                        type="text"
-                        placeholder="Ecrire ici"
-                        onChange={onStateChange}
-                        value={msg}
-                    />
-                    <button className="btnSendMsg" id="sendMsgBtn">
-                        <FaPaperPlane />
-                    </button>
-                </div>
+                {activeConversation !== null && <CreateMessage />}
             </div>
         </div>
     );

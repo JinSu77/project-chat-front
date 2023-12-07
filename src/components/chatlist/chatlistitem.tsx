@@ -13,6 +13,7 @@ interface ChatListItemProps {
     item: IConversation | IChannel;
     itemName: string;
 }
+
 const ChatListItem: React.FC<ChatListItemProps> = ({
     animationDelay,
     image,
@@ -34,13 +35,20 @@ const ChatListItem: React.FC<ChatListItemProps> = ({
                 type: 'chatComponent/setActiveConversation',
                 payload: {
                     activeConversation: null,
+                    activeConversationName: '',
                     messages: [],
                 },
             });
             return;
         }
 
-        await fetchMessages(item.id, channelComponentType, dispatch, token);
+        await fetchMessages(
+            item.id,
+            itemName,
+            channelComponentType,
+            dispatch,
+            token
+        );
     };
 
     return (
