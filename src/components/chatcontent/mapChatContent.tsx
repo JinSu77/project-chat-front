@@ -5,10 +5,8 @@ import { createRef, useEffect } from 'react';
 
 const MapChatContent = ({
     messages,
-    msg,
 }: {
     messages: IMessage[];
-    msg: string;
 }): JSX.Element => {
     const messagesEndRef = createRef<HTMLDivElement>();
     const scrollToBottom = (): void => {
@@ -34,7 +32,7 @@ const MapChatContent = ({
             }
         }); */
         scrollToBottom();
-    }, [msg, scrollToBottom]);
+    }, [scrollToBottom]);
 
     return (
         <>

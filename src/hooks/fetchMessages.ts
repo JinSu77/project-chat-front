@@ -4,6 +4,7 @@ import { handleLogout } from '../components/logout';
 
 const fetchMessages = async (
     itemId: number | null,
+    itemName: string,
     channelComponentType: ChatComponentType,
     dispatch: React.Dispatch<AnyAction>,
     token: string | null
@@ -51,6 +52,7 @@ const fetchMessages = async (
         type: 'chatComponent/setActiveConversation',
         payload: {
             activeConversation: itemId,
+            activeConversationName: itemName,
             messages: json.data.messages,
         },
     });
