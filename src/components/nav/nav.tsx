@@ -137,7 +137,7 @@ export default function Nav(): JSX.Element {
         dispatch({
             type: 'chatComponent/setActiveConversation',
             payload: {
-                activeConversation: null,
+                activeConversationId: 0,
                 activeConversationName: '',
                 messages: [],
             },

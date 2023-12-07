@@ -15,8 +15,8 @@ const ChatContent: React.FC = () => {
     const conversationName: string = useSelector(
         (state: RootState) => state.chatComponent.activeConversationName
     );
-    const activeConversation: number = useSelector(
-        (state: RootState) => state.chatComponent.activeConversation
+    const activeConversationId: number = useSelector(
+        (state: RootState) => state.chatComponent.activeConversationId
     );
 
     return (
@@ -43,7 +43,7 @@ const ChatContent: React.FC = () => {
             <MapChatContent messages={messages} />
 
             <div className="content__footer">
-                {activeConversation !== null && <CreateMessage />}
+                {activeConversationId !== 0 && <CreateMessage />}
             </div>
         </div>
     );

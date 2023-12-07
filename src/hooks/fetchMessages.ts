@@ -51,7 +51,7 @@ const fetchMessages = async (
     dispatch({
         type: 'chatComponent/setActiveConversation',
         payload: {
-            activeConversation: itemId,
+            activeConversationId: itemId,
             activeConversationName: itemName,
             messages: json.data.messages,
         },
