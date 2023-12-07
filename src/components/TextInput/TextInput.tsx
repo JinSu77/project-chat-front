@@ -27,7 +27,7 @@ const TextInput: React.FC<TextInputProps> = ({
             <input
                 type={type}
                 placeholder={placeholder}
-                className="input input-bordered w-full max-w-xs rounded-xl"
+                className="input input-bordered w-auto rounded-xl"
                 value={value}
                 onChange={onChange}
                 minLength={minLength}

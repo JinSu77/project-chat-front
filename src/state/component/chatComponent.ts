@@ -4,7 +4,7 @@ import { IMessage } from '../../interfaces/message/IMessage';
 export type ChatComponentType = 'conversations' | 'channels' | null;
 
 export interface ChatComponentState {
-    activeConversation: number;
+    activeConversationId: number; // rename en activeConversationId
     activeConversationName: string;
     messages: IMessage[];
     type: ChatComponentType;
@@ -12,7 +12,7 @@ export interface ChatComponentState {
 }
 
 const initialState: ChatComponentState = {
-    activeConversation: 0,
+    activeConversationId: 0,
     activeConversationName: '',
     messages: [],
     type: null,
@@ -23,17 +23,23 @@ export const chatComponentSlice = createSlice({
     name: 'chatComponent',
     initialState,
     reducers: {
+        addMessage: (state, action: PayloadAction<{ message: IMessage }>) => {
+            return {
+                ...state,
+                messages: [...state.messages, action.payload.message],
+            };
+        },
         setActiveConversation: (
             state,
             action: PayloadAction<{
-                activeConversation: number;
+                activeConversationId: number;
                 activeConversationName: string;
                 messages: IMessage[];
             }>
         ) => {
             return {
                 ...state,
-                activeConversation: action.payload.activeConversation,
+                activeConversationId: action.payload.activeConversationId,
                 activeConversationName: action.payload.activeConversationName,
                 messages: action.payload.messages,
             };
@@ -61,6 +67,7 @@ export const chatComponentSlice = createSlice({
 });
 
 export const {
+    addMessage,
     setActiveConversation,
     setChatComponentType,
     setChatComponentLoading,

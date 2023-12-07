@@ -47,14 +47,14 @@ const useApiFetch = (): [
                     setError(responseData.data.errors);
                 } else {
                     setError(
-                        '[useFetch] An api side unhandled error has occured'
+                        '[useApiFetch] An api side unhandled error has occured'
                     );
                 }
             } else {
                 setData(responseData.data);
             }
         } catch (err) {
-            setError('[useFetch] An unknown error has been catched');
+            setError('[useApiFetch] ' + err);
             console.error(err);
         } finally {
             setIsLoading(false);

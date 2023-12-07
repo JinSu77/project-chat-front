@@ -1,7 +1,7 @@
 import ChatItem from './chatitem';
 import avatar_default from '../../assets/avatar_default.jpg';
 import { IMessage } from '../../interfaces/message/IMessage';
-import { createRef, useEffect } from 'react';
+import { createRef, useCallback, useEffect } from 'react';
 
 const MapChatContent = ({
     messages,
@@ -9,28 +9,14 @@ const MapChatContent = ({
     messages: IMessage[];
 }): JSX.Element => {
     const messagesEndRef = createRef<HTMLDivElement>();
-    const scrollToBottom = (): void => {
+    const scrollToBottom = useCallback(() => {
         if (messagesEndRef.current) {
             messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
         }
-    };
+    }, [messagesEndRef]);
 
     useEffect(() => {
         console.log('[MapChatContent] UseEffect');
-        /*         window.addEventListener('keydown', (e) => {
-            if (e.keyCode === 13) {
-                if (msg !== '') {
-                    const newChatItem: ChatItemData = {
-                        key: chatItems.length + 1,
-                        type: '',
-                        msg: msg,
-                        image: '',
-                    };
-                    setChatItems([...chatItems, newChatItem]);
-                    setMsg('');
-                }
-            }
-        }); */
         scrollToBottom();
     }, [scrollToBottom]);
 

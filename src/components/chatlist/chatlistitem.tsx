@@ -21,8 +21,8 @@ const ChatListItem: React.FC<ChatListItemProps> = ({
     itemName,
 }: ChatListItemProps) => {
     const dispatch = useDispatch();
-    const activeConversation = useSelector(
-        (state: RootState) => state.chatComponent.activeConversation
+    const activeConversationId = useSelector(
+        (state: RootState) => state.chatComponent.activeConversationId
     );
     const channelComponentType = useSelector(
         (state: RootState) => state.chatComponent.type
@@ -30,11 +30,11 @@ const ChatListItem: React.FC<ChatListItemProps> = ({
     const token = useSelector((state: RootState) => state.authentication.token);
 
     const selectChat = async (): Promise<void> => {
-        if (activeConversation === item.id) {
+        if (activeConversationId === item.id) {
             dispatch({
                 type: 'chatComponent/setActiveConversation',
                 payload: {
-                    activeConversation: null,
+                    activeConversationId: 0,
                     activeConversationName: '',
                     messages: [],
                 },
@@ -56,7 +56,7 @@ const ChatListItem: React.FC<ChatListItemProps> = ({
             style={{ animationDelay: `0.${animationDelay}s` }}
             onClick={selectChat}
             className={`chatlist__item ${
-                activeConversation === item.id ? 'active' : ''
+                activeConversationId === item.id ? 'active' : ''
             }`}
         >
             <Avatar image={image ? image : avatar_default} />
