@@ -4,6 +4,8 @@ import Logout, { handleLogout } from '../logout';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import { useCallback, useEffect, useRef } from 'react';
+import fetchMessages from '../../hooks/fetchMessages';
+import getItemName from '../../hooks/getItemName';
 
 export default function Nav(): JSX.Element {
     const dispatch = useDispatch();
@@ -78,6 +80,34 @@ export default function Nav(): JSX.Element {
                     },
                 });
 
+                if (store === 'channels') {
+                    if (json.data.channels.length > 0) {
+                        fetchMessages(
+                            json.data.channels[0].id,
+                            getItemName({
+                                item: json.data.channels[0],
+                                authUsername: user?.username,
+                            }),
+                            store,
+                            dispatch,
+                            token
+                        );
+                    }
+                } else if (store === 'conversations') {
+                    if (json.data.conversations.length > 0) {
+                        fetchMessages(
+                            json.data.conversations[0].id,
+                            getItemName({
+                                item: json.data.conversations[0],
+                                authUsername: user?.username,
+                            }),
+                            store,
+                            dispatch,
+                            token
+                        );
+                    }
+                }
+
                 dispatch({
                     type: 'chatComponent/setChatComponentLoading',
                     payload: {
@@ -86,7 +116,7 @@ export default function Nav(): JSX.Element {
                 });
             }
         },
-        [dispatch, token, user?.id]
+        [dispatch, token, user?.id, user?.username]
     );
 
     useEffect(() => {
@@ -127,19 +157,14 @@ export default function Nav(): JSX.Element {
     ): void => {
         e.preventDefault();
 
+        if (actualChatComponentType.current === e.currentTarget.value) {
+            return;
+        }
+
         dispatch({
             type: 'chatComponent/setChatComponentType',
             payload: {
                 type: e.currentTarget.value,
-            },
-        });
-
-        dispatch({
-            type: 'chatComponent/setActiveConversation',
-            payload: {
-                activeConversationId: 0,
-                activeConversationName: '',
-                messages: [],
             },
         });
     };
