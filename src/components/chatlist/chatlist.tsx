@@ -6,8 +6,12 @@ import { RootState } from '../../store/store';
 import { IConversation } from '../../interfaces/conversation/IConversation';
 import { IChannel } from '../../interfaces/channel/IChannel';
 import MapChatListItem from './mapChatListItem';
+import renderWhenLoaded from '../../hooks/renderWhenLoaded';
 
 const ChatList: React.FC = () => {
+    const chatComponentLoading = useSelector(
+        (state: RootState) => state.chatComponent.isLoading
+    );
     const chatComponentType: string | null = useSelector(
         (state: RootState) => state.chatComponent.type
     );
@@ -29,7 +33,7 @@ const ChatList: React.FC = () => {
         if (chatComponentType === 'conversations') {
             setData(conversations);
         }
-    }, [chatComponentType, conversations, channels]);
+    }, [chatComponentType, channels, conversations]);
 
     return (
         <div className="main__chatlist">
@@ -50,7 +54,14 @@ const ChatList: React.FC = () => {
                 </div>
             </div>
             <div className="chatlist__items">
-                <MapChatListItem data={data} />
+                {renderWhenLoaded({
+                    isLoading: chatComponentLoading,
+                    loadedComponent: (
+                        <>
+                            <MapChatListItem data={data} />
+                        </>
+                    ),
+                })}
             </div>
         </div>
     );

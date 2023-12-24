@@ -39,6 +39,7 @@ const ChatListItem: React.FC<ChatListItemProps> = ({
                     messages: [],
                 },
             });
+
             return;
         }
 

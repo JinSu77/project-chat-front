@@ -23,7 +23,7 @@ function Login(): JSX.Element {
     useEffect(() => {
         console.log('[Login] UseEffect');
         if (isLoggedIn) {
-            navigate('/', { replace: true });
+            navigate('/channels', { replace: true });
 
             return () => {};
         }
@@ -38,7 +38,7 @@ function Login(): JSX.Element {
                 },
             });
 
-            navigate('/');
+            navigate('/channels');
 
             return () => {};
         }
