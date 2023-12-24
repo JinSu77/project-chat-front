@@ -29,7 +29,6 @@ function App(): JSX.Element {
                 <Route element={<AuthenticatedRoutes />}>
                     {/* <Route path="/dashboard" element={<Dashboard />} /> */}
 
-                    {/* Il faut créer un truc pour redigier vers la page channels par défaut */}
                     <Route
                         path="/"
                         element={<Conversation type="channels" />}
