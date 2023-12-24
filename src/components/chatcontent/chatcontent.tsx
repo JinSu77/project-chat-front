@@ -7,8 +7,12 @@ import { RootState } from '../../store/store';
 import { IMessage } from '../../interfaces/message/IMessage';
 import MapChatContent from './mapChatContent';
 import CreateMessage from '../createMessage';
+import renderWhenLoaded from '../../hooks/renderWhenLoaded';
 
 const ChatContent: React.FC = () => {
+    const chatComponentLoading = useSelector(
+        (state: RootState) => state.chatComponent.isLoading
+    );
     const messages: IMessage[] = useSelector(
         (state: RootState) => state.chatComponent.messages
     );
@@ -40,11 +44,18 @@ const ChatContent: React.FC = () => {
                 </div>
             </div>
 
-            <MapChatContent messages={messages} />
+            {renderWhenLoaded({
+                isLoading: chatComponentLoading,
+                loadedComponent: (
+                    <>
+                        <MapChatContent messages={messages} />
 
-            <div className="content__footer">
-                {activeConversationId !== 0 && <CreateMessage />}
-            </div>
+                        <div className="content__footer">
+                            {activeConversationId !== 0 && <CreateMessage />}
+                        </div>
+                    </>
+                ),
+            })}
         </div>
     );
 };

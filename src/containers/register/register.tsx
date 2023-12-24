@@ -24,7 +24,7 @@ function Register(): JSX.Element {
     useEffect(() => {
         console.log('[Register] UseEffect');
         if (isLoggedIn) {
-            navigate('/', { replace: true });
+            navigate('/channels', { replace: true });
 
             return () => {};
         }
