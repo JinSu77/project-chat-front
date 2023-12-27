@@ -7,7 +7,7 @@ import { RootState } from '../../store/store';
 import { IMessage } from '../../interfaces/message/IMessage';
 import MapChatContent from './mapChatContent';
 import CreateMessage from '../createMessage';
-import renderWhenLoaded from '../../hooks/renderWhenLoaded';
+import renderWhenLoaded from '../../utils/renderWhenLoaded';
 
 const ChatContent: React.FC = () => {
     const chatComponentLoading = useSelector(

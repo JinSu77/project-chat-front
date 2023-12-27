@@ -6,7 +6,7 @@ import { RootState } from '../../store/store';
 import { IConversation } from '../../interfaces/conversation/IConversation';
 import { IChannel } from '../../interfaces/channel/IChannel';
 import MapChatListItem from './mapChatListItem';
-import renderWhenLoaded from '../../hooks/renderWhenLoaded';
+import renderWhenLoaded from '../../utils/renderWhenLoaded';
 
 const ChatList: React.FC = () => {
     const chatComponentLoading = useSelector(
