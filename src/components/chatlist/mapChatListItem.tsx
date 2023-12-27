@@ -3,7 +3,7 @@ import { IChannel } from '../../interfaces/channel/IChannel';
 import { IConversation } from '../../interfaces/conversation/IConversation';
 import { RootState } from '../../store/store';
 import ChatListItems from './chatlistitem';
-import getItemName from '../../hooks/getItemName';
+import getItemName from '../../utils/getItemName';
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
 
