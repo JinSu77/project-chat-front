@@ -5,6 +5,7 @@ import Conversation from './containers/conversation/conversation';
 import './App.css';
 import { useSelector } from 'react-redux';
 import { RootState } from './store/store';
+import useMercureHub from './hooks/useMercureHub';
 
 const AuthenticatedRoutes: React.FC = () => {
     const isLoggedIn = useSelector(
@@ -20,6 +21,8 @@ const AuthenticatedRoutes: React.FC = () => {
 };
 
 function App(): JSX.Element {
+    useMercureHub(['https://example.com/my-private-topic']);
+
     return (
         <>
             <Routes>
