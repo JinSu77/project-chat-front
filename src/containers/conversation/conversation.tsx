@@ -21,10 +21,13 @@ export default function Conversation(props: ConversationProps): JSX.Element {
     );
     const user = useSelector((state: RootState) => state.authentication.user);
     const token = useSelector((state: RootState) => state.authentication.token);
+
     const dispatch = useDispatch();
     const { id } = useParams<{ id: string | undefined }>();
-    const actualChatComponentType = useRef<string | null>(chatComponentType);
-    const actualProps = useRef<ChatComponentType>(props.type);
+
+    const registeredChatComponentType =
+        useRef<ChatComponentType>(chatComponentType);
+    const registeredPropsType = useRef<ChatComponentType>(props.type);
     const hasFetched = useRef<boolean>(false);
 
     const fillStore = useCallback(
@@ -100,25 +103,24 @@ export default function Conversation(props: ConversationProps): JSX.Element {
         if (hasFetched.current === false) {
             fillStore(props.type, paramId);
 
-            actualChatComponentType.current = chatComponentType;
-
-            actualProps.current = props.type;
+            registeredPropsType.current = props.type;
 
             hasFetched.current = true;
 
             return;
         }
 
-        if (hasFetched.current === true && props.type !== actualProps.current) {
+        if (
+            hasFetched.current === true &&
+            props.type !== registeredPropsType.current
+        ) {
             fillStore(props.type, paramId);
 
-            actualChatComponentType.current = chatComponentType;
-
-            actualProps.current = props.type;
+            registeredPropsType.current = props.type;
 
             return;
         }
-    }, [chatComponentType, fillStore, id, props.type]);
+    }, [fillStore, id, props.type, registeredChatComponentType]);
 
     return (
         <div className="body-conversation">

@@ -25,25 +25,22 @@ function Login(): JSX.Element {
         if (isLoggedIn) {
             navigate('/channels', { replace: true });
 
-            return () => {};
+            return;
         }
 
         if (data && data.token) {
             dispatch({
                 type: 'authentication/login',
                 payload: {
+                    loggedIn: true,
+                    mercureToken: data.mercureToken,
                     token: data.token,
                     user: data.user,
-                    loggedIn: true,
                 },
             });
 
-            navigate('/channels');
-
-            return () => {};
+            return;
         }
-
-        return () => {};
     }, [data, dispatch, isLoggedIn, navigate]);
 
     const handleFormSubmit = async (
