@@ -4,14 +4,12 @@ import { IUser } from '../../../interfaces/user/IUser';
 
 export interface AuthenticationState {
     loggedIn: boolean;
-    mercureToken?: string | null;
     token: string | null;
     user?: IUser | null;
 }
 
 const initialState: AuthenticationState = {
     loggedIn: false,
-    mercureToken: null,
     token: null,
     user: null,
 };

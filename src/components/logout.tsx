@@ -11,6 +11,7 @@ export const handleLogout = (
     dispatch({ type: 'channels/resetToDefault' });
     dispatch({ type: 'conversations/resetToDefault' });
     dispatch({ type: 'chatComponent/resetToDefault' });
+    dispatch({ type: 'mercure/resetToDefault' });
 
     if (navigateToLogin && navigate) {
         return navigate('/login');
