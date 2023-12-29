@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import {
@@ -6,10 +6,20 @@ import {
     fetchEventSource,
 } from '@microsoft/fetch-event-source';
 
-export default function useMercureHub(topics: string[]): void {
-    const mercureToken = useSelector(
-        (state: RootState) => state.authentication.mercureToken
-    );
+export default function useMercureHub(): void {
+    const mercureToken = useSelector((state: RootState) => state.mercure.token);
+
+    const topics = useSelector((state: RootState) => state.mercure.topics);
+
+    /*     const getTopics = useCallback((): string[] => {
+        const topics: string[] = [];
+
+        for (const channel of channels) {
+            topics.push(`/channels/${channel.id}`);
+        }
+
+        return topics;
+    }, [channels]); */
 
     const handleMessage = (event: EventSourceMessage): void => {
         const data = JSON.parse(event.data);
@@ -18,35 +28,22 @@ export default function useMercureHub(topics: string[]): void {
 
     const logMessageOnOpen = (res: Response): void => {
         if (res.ok && res.status === 200) {
-            console.log('[useMercureHub]', 'Connection established');
+            console.log('[useMercureHub] Connection established');
         } else if (
             res.status >= 400 &&
             res.status < 500 &&
             res.status !== 429
         ) {
-            console.log('[useMercureHub]', 'Client side error ', res);
+            console.log('[useMercureHub] Client side error ', res);
         } else {
-            console.log('[useMercureHub]', 'Server side error ', res);
+            console.log('[useMercureHub] Server side error ', res);
         }
     };
 
-    useEffect(() => {
-        console.log('[useMercureHub] UseEffect');
+    const connectToMercureHub = useCallback(
+        async (controller: AbortController, url: URL): Promise<void> => {
+            const { signal } = controller;
 
-        if (!mercureToken) {
-            console.log('[useMercureHub] No token');
-            return;
-        }
-
-        const controller = new AbortController();
-
-        const { signal } = controller;
-
-        const url = new URL('http://localhost:1234/.well-known/mercure');
-
-        url.searchParams.append('topic', topics.join(','));
-
-        const connectToMercureHub = async (): Promise<void> => {
             await fetchEventSource(url.toString(), {
                 method: 'GET',
                 headers: {
@@ -55,14 +52,12 @@ export default function useMercureHub(topics: string[]): void {
                 signal: signal,
                 onclose: () => {
                     console.log(
-                        '[useMercureHub]',
-                        'Connection closed by the server'
+                        '[useMercureHub] Connection closed by the server'
                     );
                 },
                 onerror: (err) => {
                     console.log(
-                        '[useMercureHub]',
-                        'There was an error from server',
+                        '[useMercureHub] There was an error from server',
                         err
                     );
                 },
@@ -77,13 +72,36 @@ export default function useMercureHub(topics: string[]): void {
                     });
                 },
             });
-        };
+        },
+        [mercureToken]
+    );
 
-        connectToMercureHub();
+    useEffect(() => {
+        console.log('[useMercureHub] UseEffect');
+
+        if (!mercureToken) {
+            console.log('[useMercureHub] No token');
+            return;
+        }
+
+        if (topics.length === 0) {
+            console.log('[useMercureHub] No topics');
+            return;
+        }
+
+        const controller = new AbortController();
+
+        const url = new URL('http://localhost:1234/.well-known/mercure');
+
+        for (const topic of topics) {
+            url.searchParams.append('topic', topic);
+        }
+
+        connectToMercureHub(controller, url);
 
         return () => {
             console.log('[useMercureHub] Closing connection');
             controller.abort();
         };
-    }, [mercureToken, topics]);
+    }, [connectToMercureHub, topics, mercureToken]);
 }

@@ -33,9 +33,15 @@ function Login(): JSX.Element {
                 type: 'authentication/login',
                 payload: {
                     loggedIn: true,
-                    mercureToken: data.mercureToken,
                     token: data.token,
                     user: data.user,
+                },
+            });
+
+            dispatch({
+                type: 'mercure/setToken',
+                payload: {
+                    token: data.mercureToken,
                 },
             });
 

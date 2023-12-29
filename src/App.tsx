@@ -21,7 +21,7 @@ const AuthenticatedRoutes: React.FC = () => {
 };
 
 function App(): JSX.Element {
-    useMercureHub(['https://example.com/my-private-topic']);
+    useMercureHub();
 
     return (
         <>
