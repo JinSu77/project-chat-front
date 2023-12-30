@@ -4,7 +4,7 @@ import { IMessage } from '../../interfaces/message/IMessage';
 export type ChatComponentType = 'conversations' | 'channels' | null;
 
 export interface ChatComponentState {
-    activeConversationId: number; // rename en activeConversationId
+    activeConversationId: number;
     activeConversationName: string;
     messages: IMessage[];
     type: ChatComponentType;

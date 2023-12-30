@@ -2,11 +2,13 @@ import { IChannel } from '../interfaces/channel/IChannel';
 import { IConversation } from '../interfaces/conversation/IConversation';
 
 export interface IGetItemName {
-    item: IChannel | IConversation;
+    item?: IChannel | IConversation;
     authUsername: string | undefined;
 }
 
 const getItemName = ({ item, authUsername }: IGetItemName): string => {
+    if (!item) return '';
+
     if ('name' in item) {
         const copyItem = item as IChannel;
 

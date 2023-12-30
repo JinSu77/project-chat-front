@@ -4,129 +4,74 @@ import ChatBody from '../../components/chatbody/chatbody';
 import { useCallback, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
-import { useParams } from 'react-router-dom';
-import { handleLogout } from '../../components/logout';
-import { ChatComponentType } from '../../state/component/chatComponent';
-import fetchStoreData from '../../utils/fetchStoreData';
-import updateStoreData from '../../utils/updateStoreData';
-import updateChatComponentMessageStore from '../../utils/updateChatComponentMessageStore';
+import initializeChatComponentStore from '../../utils/initializeChatComponentStore';
 
 type ConversationProps = {
     type: 'conversations' | 'channels';
 };
 
 export default function Conversation(props: ConversationProps): JSX.Element {
-    const chatComponentType = useSelector(
-        (state: RootState) => state.chatComponent.type
-    );
-    const user = useSelector((state: RootState) => state.authentication.user);
     const token = useSelector((state: RootState) => state.authentication.token);
+    const user = useSelector((state: RootState) => state.authentication.user);
 
     const dispatch = useDispatch();
-    const { id } = useParams<{ id: string | undefined }>();
 
-    const registeredChatComponentType =
-        useRef<ChatComponentType>(chatComponentType);
-    const registeredPropsType = useRef<ChatComponentType>(props.type);
     const hasFetched = useRef<boolean>(false);
 
-    const fillStore = useCallback(
-        async (store: ChatComponentType, paramId?: number) => {
-            if (typeof token === 'string' && typeof user?.id === 'number') {
-                dispatch({
-                    type: 'chatComponent/setChatComponentLoading',
-                    payload: {
-                        isLoading: true,
-                    },
-                });
+    const initChatComponentStore = useCallback(async () => {
+        dispatch({ type: 'chatComponent/resetToDefault' });
 
-                const response = await fetchStoreData(store, token, user?.id);
+        dispatch({
+            type: 'chatComponent/setChatComponentLoading',
+            payload: {
+                isLoading: true,
+            },
+        });
 
-                if (!response || !response.ok) {
-                    handleLogout(dispatch, null, false);
-                    return;
-                }
+        await initializeChatComponentStore(
+            dispatch,
+            token,
+            user?.id,
+        );
 
-                const json = await response.json();
+        dispatch({
+            type: 'chatComponent/setChatComponentType',
+            payload: {
+                type: props.type,
+            },
+        });
 
-                updateStoreData(store, json.data, dispatch);
-
-                dispatch({ type: 'chatComponent/resetToDefault' });
-
-                dispatch({
-                    type: 'chatComponent/setChatComponentType',
-                    payload: {
-                        type: store,
-                    },
-                });
-
-                let data;
-
-                if (json.data.channels !== undefined) {
-                    data = json.data.channels;
-                }
-
-                if (json.data.conversations !== undefined) {
-                    data = json.data.conversations;
-                }
-
-                if (data) {
-                    await updateChatComponentMessageStore(
-                        store,
-                        data,
-                        paramId,
-                        dispatch,
-                        token,
-                        user?.username
-                    );
-                }
-
-                dispatch({
-                    type: 'chatComponent/setChatComponentLoading',
-                    payload: {
-                        isLoading: false,
-                    },
-                });
-            }
-        },
-        [dispatch, token, user?.id, user?.username]
-    );
+        dispatch({
+            type: 'chatComponent/setChatComponentLoading',
+            payload: {
+                isLoading: false,
+            },
+        });
+    }, [dispatch, token, user, props.type]);
 
     useEffect(() => {
         console.log('[Conversation] UseEffect');
 
-        const paramId: number | undefined =
-            typeof id === 'string' && !isNaN(parseInt(id))
-                ? parseInt(id)
-                : undefined;
-
         if (hasFetched.current === false) {
-            fillStore(props.type, paramId);
+            console.log('[Conversation] UseEffect - first fetch');
 
-            registeredPropsType.current = props.type;
+            const asyncInitChatComponentStore = async (): Promise<void> => {
+                await initChatComponentStore();
+            };
+
+            asyncInitChatComponentStore();
 
             hasFetched.current = true;
 
             return;
         }
-
-        if (
-            hasFetched.current === true &&
-            props.type !== registeredPropsType.current
-        ) {
-            fillStore(props.type, paramId);
-
-            registeredPropsType.current = props.type;
-
-            return;
-        }
-    }, [fillStore, id, props.type, registeredChatComponentType]);
+    }, [initChatComponentStore]);
 
     return (
         <div className="body-conversation">
             <div className="main-conv">
                 <Nav />
-                <ChatBody />
+                <ChatBody hasFetched={hasFetched} type={props.type} />
             </div>
         </div>
     );
