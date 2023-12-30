@@ -22,8 +22,9 @@ function Login(): JSX.Element {
 
     useEffect(() => {
         console.log('[Login] UseEffect');
+
         if (isLoggedIn) {
-            navigate('/channels', { replace: true });
+            navigate('/channels/1', { replace: true });
 
             return;
         }
