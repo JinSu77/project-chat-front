@@ -10,17 +10,17 @@ import CreateMessage from '../createMessage';
 import renderWhenLoaded from '../../utils/renderWhenLoaded';
 
 const ChatContent: React.FC = () => {
+    const activeConversationId: number = useSelector(
+        (state: RootState) => state.chatComponent.activeConversationId
+    );
     const chatComponentLoading = useSelector(
         (state: RootState) => state.chatComponent.isLoading
-    );
-    const messages: IMessage[] = useSelector(
-        (state: RootState) => state.chatComponent.messages
     );
     const conversationName: string = useSelector(
         (state: RootState) => state.chatComponent.activeConversationName
     );
-    const activeConversationId: number = useSelector(
-        (state: RootState) => state.chatComponent.activeConversationId
+    const messages: IMessage[] = useSelector(
+        (state: RootState) => state.chatComponent.messages
     );
 
     return (

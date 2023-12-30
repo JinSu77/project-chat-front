@@ -7,33 +7,35 @@ import { IConversation } from '../../interfaces/conversation/IConversation';
 import { IChannel } from '../../interfaces/channel/IChannel';
 import MapChatListItem from './mapChatListItem';
 import renderWhenLoaded from '../../utils/renderWhenLoaded';
+import { ChatComponentType } from '../../state/component/chatComponent';
 
-const ChatList: React.FC = () => {
+interface ChatListProps {
+    channels: IChannel[];
+    conversations: IConversation[];
+    type: ChatComponentType;
+}
+
+const ChatList: React.FC<ChatListProps> = (props: ChatListProps) => {
     const chatComponentLoading = useSelector(
         (state: RootState) => state.chatComponent.isLoading
-    );
-    const chatComponentType: string | null = useSelector(
-        (state: RootState) => state.chatComponent.type
-    );
-    const conversations: IConversation[] = useSelector(
-        (state: RootState) => state.conversations.data
-    );
-    const channels: IChannel[] = useSelector(
-        (state: RootState) => state.channels.data
     );
     const [data, setData] = useState<IConversation[] | IChannel[]>([]);
 
     useEffect(() => {
         console.log('[ChatList] UseEffect');
 
-        if (chatComponentType === 'channels') {
-            setData(channels);
-        }
+        const setDataState = (): void => {
+            if (props.type === 'channels') {
+                setData(props.channels);
+            }
 
-        if (chatComponentType === 'conversations') {
-            setData(conversations);
-        }
-    }, [chatComponentType, channels, conversations]);
+            if (props.type === 'conversations') {
+                setData(props.conversations);
+            }
+        };
+
+        setDataState();
+    }, [props.channels, props.conversations, props.type]);
 
     return (
         <div className="main__chatlist">

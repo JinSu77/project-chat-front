@@ -5,7 +5,7 @@ import { RootState } from '../../store/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { IConversation } from '../../interfaces/conversation/IConversation';
 import { IChannel } from '../../interfaces/channel/IChannel';
-import fetchMessages from '../../utils/fetchMessages';
+import { useNavigate } from 'react-router-dom';
 
 interface ChatListItemProps {
     animationDelay: number;
@@ -27,9 +27,10 @@ const ChatListItem: React.FC<ChatListItemProps> = ({
     const channelComponentType = useSelector(
         (state: RootState) => state.chatComponent.type
     );
-    const token = useSelector((state: RootState) => state.authentication.token);
 
-    const selectChat = async (): Promise<void> => {
+    const navigate = useNavigate();
+
+    const selectChat = (): void => {
         if (activeConversationId === item.id) {
             dispatch({
                 type: 'chatComponent/setActiveConversation',
@@ -43,13 +44,7 @@ const ChatListItem: React.FC<ChatListItemProps> = ({
             return;
         }
 
-        await fetchMessages(
-            item.id,
-            itemName,
-            channelComponentType,
-            dispatch,
-            token
-        );
+        return navigate(`/${channelComponentType}/${item.id}`);
     };
 
     return (
