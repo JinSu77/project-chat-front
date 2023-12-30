@@ -30,7 +30,7 @@ export default function Nav(): JSX.Element {
                                 ? preventUnnecessaryAction
                                 : () => {}
                         }
-                        to="/channels"
+                        to="/channels/1"
                     >
                         Channel
                     </Link>
@@ -43,7 +43,7 @@ export default function Nav(): JSX.Element {
                                 ? preventUnnecessaryAction
                                 : () => {}
                         }
-                        to="/conversations"
+                        to="/conversations/1"
                     >
                         Conversation
                     </Link>

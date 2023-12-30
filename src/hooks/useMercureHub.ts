@@ -11,16 +11,6 @@ export default function useMercureHub(): void {
 
     const topics = useSelector((state: RootState) => state.mercure.topics);
 
-    /*     const getTopics = useCallback((): string[] => {
-        const topics: string[] = [];
-
-        for (const channel of channels) {
-            topics.push(`/channels/${channel.id}`);
-        }
-
-        return topics;
-    }, [channels]); */
-
     const handleMessage = (event: EventSourceMessage): void => {
         const data = JSON.parse(event.data);
         console.log('[useMercureHub]', data);
