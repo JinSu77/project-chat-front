@@ -31,15 +31,22 @@ export default function ChatBody(props: ChatBodyProps): JSX.Element {
     const typeRef = useRef<ChatComponentType | undefined>();
 
     const updateChatComponent = useCallback(async () => {
+        dispatch({
+            type: 'chatComponent/setChatComponentType',
+            payload: {
+                type: typeRef.current,
+            },
+        });
+
         if (paramIdRef.current !== undefined) {
             if (
                 typeRef.current === 'channels' &&
-                paramIdRef.current > channels.length - 1
+                paramIdRef.current > channels.length
             ) {
                 paramIdRef.current = undefined;
             } else if (
                 typeRef.current === 'conversations' &&
-                paramIdRef.current > conversations.length - 1
+                paramIdRef.current > conversations.length
             ) {
                 paramIdRef.current = undefined;
             }
@@ -61,17 +68,20 @@ export default function ChatBody(props: ChatBodyProps): JSX.Element {
             return undefined;
         };
 
-        const getMessages = (type?: ChatComponentType): IMessage[] => {
+        const getMessages = (
+            itemId: number,
+            type?: ChatComponentType
+        ): IMessage[] => {
             if (type === 'conversations') {
                 const conversation: IConversation | undefined =
-                    conversations.find((c) => c.id === paramIdRef.current);
+                    conversations.find((c) => c.id === itemId);
 
                 return conversation ? conversation.messages : [];
             }
 
             if (type === 'channels') {
                 const channel: IChannel | undefined = channels.find(
-                    (c) => c.id === paramIdRef.current
+                    (c) => c.id === itemId
                 );
 
                 return channel ? channel.messages : [];
@@ -80,18 +90,19 @@ export default function ChatBody(props: ChatBodyProps): JSX.Element {
             return [];
         };
 
-        const activeConversationId = paramIdRef.current
-            ? paramIdRef.current
-            : 0;
-
         const item: IChannel | IConversation | undefined = getItem();
+
+        const activeConversationId: number = item?.id ?? 0;
 
         const itemName: string = getItemName({
             item: item,
             authUsername: user?.username,
         });
 
-        const messages: IMessage[] = getMessages(typeRef.current);
+        const messages: IMessage[] = getMessages(
+            activeConversationId,
+            typeRef.current
+        );
 
         dispatch({
             type: 'chatComponent/setActiveConversation',
@@ -117,13 +128,6 @@ export default function ChatBody(props: ChatBodyProps): JSX.Element {
 
         if (typeRef.current !== props.type) {
             typeRef.current = props.type;
-
-            dispatch({
-                type: 'chatComponent/setChatComponentType',
-                payload: {
-                    type: typeRef.current,
-                },
-            });
         }
 
         const asyncUpdateChatComponent = async (): Promise<void> => {
