@@ -1,38 +1,32 @@
 import { useEffect, useState } from 'react';
 import { FaPaperPlane } from 'react-icons/fa';
 import useApiFetch, { FetchProps } from '../hooks/useApiFetch';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
-import { IMessage } from '../interfaces/message/IMessage';
 
 const CreateMessage = (): JSX.Element => {
     const [fetchData, { data, error, isLoading }] = useApiFetch();
     const [content, setContent] = useState<string>('');
-    const dispatch = useDispatch();
     const activeConversationId: number = useSelector(
         (state: RootState) => state.chatComponent.activeConversationId
     );
     const conversationType: string | null = useSelector(
         (state: RootState) => state.chatComponent.type
     );
+    const mercureToken = useSelector((state: RootState) => state.mercure.token);
     const token = useSelector((state: RootState) => state.authentication.token);
 
     useEffect(() => {
         console.log('[CreateMessage] useEffect');
 
         if (data && data.message) {
-            setContent('');
+            const resetContent = (): void => {
+                setContent('');
+            };
 
-            const newMessage: IMessage = data.message as IMessage;
-
-            dispatch({
-                type: 'chatComponent/addMessage',
-                payload: {
-                    message: newMessage,
-                },
-            });
+            resetContent();
         }
-    }, [data, dispatch]);
+    }, [data]);
 
     const sendMessage = async (): Promise<void> => {
         if (content === '' || content.trim() === '') {
@@ -62,6 +56,9 @@ const CreateMessage = (): JSX.Element => {
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${token}`,
+                MercureAuthorization: mercureToken
+                    ? `Bearer ${mercureToken}`
+                    : '',
             },
             url: url,
             body: message,
