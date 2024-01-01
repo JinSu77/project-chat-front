@@ -43,7 +43,7 @@ export default function Nav(): JSX.Element {
                                 ? preventUnnecessaryAction
                                 : () => {}
                         }
-                        to="/conversations/1"
+                        to="/conversations"
                     >
                         Conversation
                     </Link>
