@@ -28,7 +28,6 @@ export default function ChatBody(props: ChatBodyProps): JSX.Element {
 
     const paramIdRef = useRef<number | undefined>();
     const typeRef = useRef<ChatComponentType | undefined>();
-    const autoSelectRef = useRef<boolean>(true);
 
     const updateChatComponent = useCallback(async () => {
         dispatch({
@@ -127,32 +126,6 @@ export default function ChatBody(props: ChatBodyProps): JSX.Element {
         });
     }, [channels, conversations, user, dispatch]);
 
-    const selectFirstChannelOrConversation = useCallback(async () => {
-        if (typeRef.current === 'channels') {
-            if (channels.length === 0) {
-                return;
-            }
-
-            const firstChannel: IChannel = channels[0];
-
-            paramIdRef.current = firstChannel.id;
-
-            await updateChatComponent();
-        }
-
-        if (typeRef.current === 'conversations') {
-            if (conversations.length === 0) {
-                return;
-            }
-
-            const firstConversation: IConversation = conversations[0];
-
-            paramIdRef.current = firstConversation.id;
-
-            await updateChatComponent();
-        }
-    }, [channels, conversations, updateChatComponent]);
-
     useEffect(() => {
         console.log('[ChatBody] UseEffect');
 
@@ -167,28 +140,14 @@ export default function ChatBody(props: ChatBodyProps): JSX.Element {
 
         if (typeRef.current !== props.type) {
             typeRef.current = props.type;
-
-            autoSelectRef.current = true;
         }
 
         const asyncUpdateChatComponent = async (): Promise<void> => {
             await updateChatComponent();
-
-            if (autoSelectRef.current) {
-                await selectFirstChannelOrConversation();
-
-                autoSelectRef.current = false;
-            }
         };
 
         asyncUpdateChatComponent();
-    }, [
-        id,
-        props.type,
-        dispatch,
-        updateChatComponent,
-        selectFirstChannelOrConversation,
-    ]);
+    }, [id, props.type, dispatch, updateChatComponent]);
 
     return (
         <div className="main_chatbody">
