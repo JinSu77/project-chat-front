@@ -1,20 +1,58 @@
 import { useCallback, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import {
     EventSourceMessage,
     fetchEventSource,
 } from '@microsoft/fetch-event-source';
+import { IMessage } from '../interfaces/message/IMessage';
 
 export default function useMercureHub(): void {
     const mercureToken = useSelector((state: RootState) => state.mercure.token);
-
     const topics = useSelector((state: RootState) => state.mercure.topics);
 
-    const handleMessage = (event: EventSourceMessage): void => {
-        const data = JSON.parse(event.data);
-        console.log('[useMercureHub]', data);
-    };
+    const dispatch = useDispatch();
+
+    const handleChannelMessage = useCallback(
+        (data: IMessage): void => {
+            dispatch({
+                type: 'channels/addMessage',
+                payload: {
+                    id: data.channel?.id as number,
+                    message: data,
+                },
+            });
+        },
+        [dispatch]
+    );
+
+    const handleConversationMessage = useCallback(
+        (data: IMessage): void => {
+            dispatch({
+                type: 'conversations/addMessage',
+                payload: {
+                    id: data.conversation_id as number,
+                    message: data,
+                },
+            });
+        },
+        [dispatch]
+    );
+
+    const handleMessage = useCallback(
+        (event: EventSourceMessage): void => {
+            const data = JSON.parse(event.data);
+
+            if (data.channel?.id !== undefined) {
+                handleChannelMessage(data);
+            }
+
+            if (data.conversation_id !== null && !isNaN(data.conversation_id)) {
+                handleConversationMessage(data);
+            }
+        },
+        [handleChannelMessage, handleConversationMessage]
+    );
 
     const logMessageOnOpen = (res: Response): void => {
         if (res.ok && res.status === 200) {
@@ -63,7 +101,7 @@ export default function useMercureHub(): void {
                 },
             });
         },
-        [mercureToken]
+        [mercureToken, handleMessage]
     );
 
     useEffect(() => {
