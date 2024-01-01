@@ -13,7 +13,6 @@ import { IConversation } from '../../interfaces/conversation/IConversation';
 import getItemName from '../../utils/getItemName';
 
 type ChatBodyProps = {
-    hasFetched: React.MutableRefObject<boolean>;
     type: ChatComponentType;
 };
 
@@ -29,6 +28,7 @@ export default function ChatBody(props: ChatBodyProps): JSX.Element {
 
     const paramIdRef = useRef<number | undefined>();
     const typeRef = useRef<ChatComponentType | undefined>();
+    const autoSelectRef = useRef<boolean>(true);
 
     const updateChatComponent = useCallback(async () => {
         dispatch({
@@ -39,14 +39,19 @@ export default function ChatBody(props: ChatBodyProps): JSX.Element {
         });
 
         if (paramIdRef.current !== undefined) {
-            if (
-                typeRef.current === 'channels' &&
-                paramIdRef.current > channels.length
-            ) {
+            const existInChannels: boolean = channels.some(
+                (c) => c.id === paramIdRef.current
+            );
+
+            const existInConversations: boolean = conversations.some(
+                (c) => c.id === paramIdRef.current
+            );
+
+            if (typeRef.current === 'channels' && existInChannels === false) {
                 paramIdRef.current = undefined;
             } else if (
                 typeRef.current === 'conversations' &&
-                paramIdRef.current > conversations.length
+                existInConversations === false
             ) {
                 paramIdRef.current = undefined;
             }
@@ -104,6 +109,14 @@ export default function ChatBody(props: ChatBodyProps): JSX.Element {
             typeRef.current
         );
 
+        window.history.replaceState(
+            null,
+            '',
+            activeConversationId !== 0
+                ? `/${typeRef.current}/${activeConversationId}`
+                : `/${typeRef.current}`
+        );
+
         dispatch({
             type: 'chatComponent/setActiveConversation',
             payload: {
@@ -113,6 +126,32 @@ export default function ChatBody(props: ChatBodyProps): JSX.Element {
             },
         });
     }, [channels, conversations, user, dispatch]);
+
+    const selectFirstChannelOrConversation = useCallback(async () => {
+        if (typeRef.current === 'channels') {
+            if (channels.length === 0) {
+                return;
+            }
+
+            const firstChannel: IChannel = channels[0];
+
+            paramIdRef.current = firstChannel.id;
+
+            await updateChatComponent();
+        }
+
+        if (typeRef.current === 'conversations') {
+            if (conversations.length === 0) {
+                return;
+            }
+
+            const firstConversation: IConversation = conversations[0];
+
+            paramIdRef.current = firstConversation.id;
+
+            await updateChatComponent();
+        }
+    }, [channels, conversations, updateChatComponent]);
 
     useEffect(() => {
         console.log('[ChatBody] UseEffect');
@@ -128,14 +167,28 @@ export default function ChatBody(props: ChatBodyProps): JSX.Element {
 
         if (typeRef.current !== props.type) {
             typeRef.current = props.type;
+
+            autoSelectRef.current = true;
         }
 
         const asyncUpdateChatComponent = async (): Promise<void> => {
             await updateChatComponent();
+
+            if (autoSelectRef.current) {
+                await selectFirstChannelOrConversation();
+
+                autoSelectRef.current = false;
+            }
         };
 
         asyncUpdateChatComponent();
-    }, [id, props.type, dispatch, updateChatComponent]);
+    }, [
+        id,
+        props.type,
+        dispatch,
+        updateChatComponent,
+        selectFirstChannelOrConversation,
+    ]);
 
     return (
         <div className="main_chatbody">

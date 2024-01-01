@@ -30,7 +30,7 @@ export default function Nav(): JSX.Element {
                                 ? preventUnnecessaryAction
                                 : () => {}
                         }
-                        to="/channels/1"
+                        to="/channels"
                     >
                         Channel
                     </Link>
