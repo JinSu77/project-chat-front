@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { IConversation } from '../../interfaces/conversation/IConversation';
 import { IChannel } from '../../interfaces/channel/IChannel';
 import { useNavigate } from 'react-router-dom';
+import { IMessage } from '../../interfaces/message/IMessage';
 
 interface ChatListItemProps {
     animationDelay: number;
@@ -24,11 +25,56 @@ const ChatListItem: React.FC<ChatListItemProps> = ({
     const activeConversationId = useSelector(
         (state: RootState) => state.chatComponent.activeConversationId
     );
-    const channelComponentType = useSelector(
+    const chatComponentType = useSelector(
         (state: RootState) => state.chatComponent.type
+    );
+    const channels = useSelector((state: RootState) => state.channels.data);
+    const conversations = useSelector(
+        (state: RootState) => state.conversations.data
     );
 
     const navigate = useNavigate();
+
+    const timeSinceLastMessage = (): string => {
+        let canal: IChannel | IConversation | undefined;
+
+        canal =
+            chatComponentType === 'channels'
+                ? channels.find((c) => c.id === item.id)
+                : undefined;
+
+        if (!canal) {
+            canal =
+                chatComponentType === 'conversations'
+                    ? conversations.find((c) => c.id === item.id)
+                    : undefined;
+
+            if (!canal) {
+                return 'unknown';
+            }
+        }
+
+        const lastMessage: IMessage | undefined =
+            canal.messages[canal.messages.length - 1];
+
+        if (lastMessage) {
+            const timeDifference =
+                new Date().getTime() -
+                new Date(lastMessage.created_at).getTime();
+
+            const minutes = Math.floor(timeDifference / 60000);
+
+            if (minutes < 1) {
+                return 'now';
+            } else if (minutes === 1) {
+                return '1 minute ago';
+            } else {
+                return `${minutes} minutes ago`;
+            }
+        }
+
+        return 'unknown';
+    };
 
     const selectChat = (): void => {
         if (activeConversationId === item.id) {
@@ -44,7 +90,7 @@ const ChatListItem: React.FC<ChatListItemProps> = ({
             return;
         }
 
-        return navigate(`/${channelComponentType}/${item.id}`);
+        return navigate(`/${chatComponentType}/${item.id}`);
     };
 
     return (
@@ -59,7 +105,7 @@ const ChatListItem: React.FC<ChatListItemProps> = ({
 
             <div className="userMeta">
                 <p>{itemName}</p>
-                <span className="activeTime">32 mins ago</span>
+                <span className="activeTime">{timeSinceLastMessage()}</span>
             </div>
         </div>
     );
