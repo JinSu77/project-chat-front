@@ -67,7 +67,7 @@ export default function Conversation(props: ConversationProps): JSX.Element {
         <div className="body-conversation">
             <div className="main-conv">
                 <Nav />
-                <ChatBody hasFetched={hasFetched} type={props.type} />
+                <ChatBody type={props.type} />
             </div>
         </div>
     );
