@@ -9,6 +9,7 @@ export const handleLogout = (
 ): void => {
     dispatch({ type: 'authentication/resetToDefault' });
     dispatch({ type: 'channels/resetToDefault' });
+    dispatch({ type: 'contacts/resetToDefault' });
     dispatch({ type: 'conversations/resetToDefault' });
     dispatch({ type: 'chatComponent/resetToDefault' });
     dispatch({ type: 'mercure/resetToDefault' });
