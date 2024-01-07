@@ -16,6 +16,10 @@ interface ChatListProps {
 }
 
 const ChatList: React.FC<ChatListProps> = (props: ChatListProps) => {
+    const chatComponentType = useSelector(
+        (state: RootState) => state.chatComponent.type
+    );
+
     const chatComponentLoading = useSelector(
         (state: RootState) => state.chatComponent.isLoading
     );
@@ -39,16 +43,12 @@ const ChatList: React.FC<ChatListProps> = (props: ChatListProps) => {
 
     return (
         <div className="main__chatlist">
-            <button className="btn">
-                <span>+ New conversation</span>
-            </button>
-
             <div className="chatlist__heading">
-                <h2>Chats</h2>
-                <button className="btn-nobg">
-                    <i className="fa fa-ellipsis-h"></i>
-                </button>
+                <h2 className="flex-1 text-center underline">
+                    {String(chatComponentType).toUpperCase()}
+                </h2>
             </div>
+
             <div className="chatList__search">
                 <div className="search_wrap">
                     <input type="text" placeholder="Search Here" required />

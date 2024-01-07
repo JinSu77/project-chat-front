@@ -6,6 +6,7 @@ import './App.css';
 import { useSelector } from 'react-redux';
 import { RootState } from './store/store';
 import useMercureHub from './hooks/useMercureHub';
+import Contact from './containers/contact/contact';
 
 const AuthenticatedRoutes: React.FC = () => {
     const isLoggedIn = useSelector(
@@ -50,10 +51,13 @@ function App(): JSX.Element {
                         path="/channels"
                         element={<Conversation type="channels" />}
                     />
+
                     <Route
                         path="/channels/:id"
                         element={<Conversation type="channels" />}
                     />
+
+                    <Route path="/contacts" element={<Contact />} />
                 </Route>
 
                 <Route path="*" element={<h1>404</h1>} />
