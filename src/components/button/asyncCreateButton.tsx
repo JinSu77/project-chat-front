@@ -1,8 +1,8 @@
-interface AddButtonProps {
+interface CreateButtonProps {
     onClick: () => void;
 }
 
-const AddButton = ({ onClick }: AddButtonProps): JSX.Element => {
+const AsyncCreateButton = ({ onClick }: CreateButtonProps): JSX.Element => {
     return (
         <button
             className="bg-gray-600 hover:bg-gray-800 text-white rounded-full p-2 mr-4"
@@ -26,4 +26,4 @@ const AddButton = ({ onClick }: AddButtonProps): JSX.Element => {
     );
 };
 
-export default AddButton;
+export default AsyncCreateButton;
