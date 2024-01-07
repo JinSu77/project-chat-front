@@ -10,6 +10,22 @@ export const contactsSlice = createSlice({
     initialState,
     reducers: {
         resetToDefault: () => initialState,
+        removeContact: (
+            state,
+            action: {
+                type: string;
+                payload: {
+                    id: number;
+                };
+            }
+        ) => {
+            return {
+                ...state,
+                data: state.data.filter(
+                    (contact) => contact.id !== action.payload.id
+                ),
+            };
+        },
         setContacts: (
             state,
             action: {
@@ -27,6 +43,7 @@ export const contactsSlice = createSlice({
     },
 });
 
-export const { resetToDefault, setContacts } = contactsSlice.actions;
+export const { resetToDefault, removeContact, setContacts } =
+    contactsSlice.actions;
 
 export default contactsSlice.reducer;
