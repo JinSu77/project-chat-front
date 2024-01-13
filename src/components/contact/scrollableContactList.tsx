@@ -26,6 +26,7 @@ const ScrollableContactList = ({
     const conversations = useSelector(
         (state: RootState) => state.conversations.data
     );
+    const mercureToken = useSelector((state: RootState) => state.mercure.token);
     const token = useSelector((state: RootState) => state.authentication.token);
     const userId = useSelector(
         (state: RootState) => state.authentication.user?.id
@@ -62,13 +63,10 @@ const ScrollableContactList = ({
                             {deleteMode && (
                                 <AsyncDeleteButton
                                     url={`http://localhost:8000/users/${userId}/contacts/${contact.id}`}
-                                    reduxStoreAction={{
-                                        type: 'contacts/removeContact',
-                                        payload: {
-                                            id: contact.id,
-                                        },
+                                    header={{
+                                        Authorization: `Bearer ${token}`,
+                                        mercureAuthorization: `Bearer ${mercureToken}`,
                                     }}
-                                    token={token ?? ''}
                                 />
                             )}
 

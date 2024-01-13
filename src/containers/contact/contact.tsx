@@ -11,19 +11,18 @@ import renderWhenLoaded from '../../utils/renderWhenLoaded';
 export default function Contact(): JSX.Element {
     const contacts = useSelector((state: RootState) => state.contacts.data);
     const token = useSelector((state: RootState) => state.authentication.token);
-    const userId = useSelector(
-        (state: RootState) => state.authentication.user?.id
-    );
+    const user = useSelector((state: RootState) => state.authentication.user);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const [contactSuggestions, setContactSuggestions] = useState<IUser[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const contactsLength = useRef<number>(0);
     const suggestionUpdatedRef = useRef<boolean>(false);
 
     const fetchContactSuggestions = useCallback(async (): Promise<void> => {
         const response = await fetch(
-            `http://localhost:8000/users/${userId}/contacts/random`,
+            `http://localhost:8000/users/${user?.id}/contacts/random`,
             {
                 method: 'GET',
                 headers: {
@@ -41,11 +40,11 @@ export default function Contact(): JSX.Element {
         const json = await response.json();
 
         setContactSuggestions(json.data.contacts);
-    }, [dispatch, token, userId]);
+    }, [dispatch, token, user?.id]);
 
     const fetchContactsList = useCallback(async (): Promise<void> => {
         const response = await fetch(
-            `http://localhost:8000/users/${userId}/contacts`,
+            `http://localhost:8000/users/${user?.id}/contacts`,
             {
                 method: 'GET',
                 headers: {
@@ -70,23 +69,22 @@ export default function Contact(): JSX.Element {
         dispatch({
             type: 'mercure/setTopics',
             payload: {
-                topics: [
-                    ...(json.data.contacts || []).map(
-                        (contact: IUser) => `/contacts/${contact.id}`
-                    ),
-                ],
+                topics: [`/users/${user?.username}${user?.id}/contacts`],
             },
         });
-    }, [dispatch, token, userId]);
+
+        contactsLength.current = json.data.contacts.length;
+    }, [dispatch, token, user]);
 
     useEffect(() => {
         console.log('[Contact] UseEffect');
 
         if (!suggestionUpdatedRef.current) {
             const fetchAndSetContacts = async (): Promise<void> => {
-                await fetchContactsList();
-
-                await fetchContactSuggestions();
+                await Promise.all([
+                    fetchContactsList(),
+                    fetchContactSuggestions(),
+                ]);
 
                 setIsLoading(false);
             };
@@ -94,8 +92,30 @@ export default function Contact(): JSX.Element {
             fetchAndSetContacts();
 
             suggestionUpdatedRef.current = true;
+
+            return;
         }
-    }, [fetchContactSuggestions, fetchContactsList]);
+
+        console.log('[Contact] UseEffect else');
+
+        if (contacts) {
+            if (contacts.length !== contactsLength.current) {
+                console.log('[Contact] updating contact suggestion');
+
+                const updateContactSuggestion = async (): Promise<void> => {
+                    setIsLoading(true);
+
+                    await fetchContactSuggestions();
+
+                    contactsLength.current = contacts.length;
+
+                    setIsLoading(false);
+                };
+
+                updateContactSuggestion();
+            }
+        }
+    }, [contacts, fetchContactSuggestions, fetchContactsList]);
 
     return (
         <div className="body-conversation">

@@ -1,29 +1,16 @@
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
 
 interface DeleteButtonProps {
     url: string;
-    reduxStoreAction?: {
-        type: string;
-        payload: object;
+    header?: {
+        Authorization: string;
+        mercureAuthorization?: string;
     };
-    token: string;
 }
 
-const AsyncDeleteButton = ({
-    url,
-    reduxStoreAction,
-    token,
-}: DeleteButtonProps): JSX.Element => {
+const AsyncDeleteButton = ({ url, header }: DeleteButtonProps): JSX.Element => {
     const [isDeleting, setIsDeleting] = useState<boolean>(false);
     const [errorOnDelete, setErrorOnDelete] = useState<boolean>(false);
-    const dispatch = useDispatch();
-
-    const handleReduxStoreUpdate = (): void => {
-        if (reduxStoreAction) {
-            dispatch(reduxStoreAction);
-        }
-    };
 
     const handleDelete = async (): Promise<void> => {
         setIsDeleting(true);
@@ -31,9 +18,7 @@ const AsyncDeleteButton = ({
         try {
             const response = await fetch(url, {
                 method: 'DELETE',
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+                headers: header,
             });
 
             if (!response.ok) {
@@ -45,8 +30,6 @@ const AsyncDeleteButton = ({
             }
 
             setIsDeleting(false);
-
-            handleReduxStoreUpdate();
         } catch (error) {
             setErrorOnDelete(true);
         }
