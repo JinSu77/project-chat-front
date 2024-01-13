@@ -39,19 +39,44 @@ export default function useMercureHub(): void {
         [dispatch]
     );
 
+    const handleUserContactDeleted = useCallback(
+        (resourceId: number) => {
+            dispatch({
+                type: 'contacts/removeContact',
+                payload: { id: resourceId },
+            });
+        },
+        [dispatch]
+    );
+
     const handleMessage = useCallback(
         (event: EventSourceMessage): void => {
             const data = JSON.parse(event.data);
+            const action = data.action;
+            const type = data.type;
+            const resource = JSON.parse(data.resource);
 
-            if (data.channel?.id !== undefined) {
-                handleChannelMessage(data);
-            }
-
-            if (data.conversation_id !== null && !isNaN(data.conversation_id)) {
-                handleConversationMessage(data);
+            if (resource) {
+                switch (action) {
+                    case 'channel.message.created':
+                        if (type === 'channels') handleChannelMessage(resource);
+                        break;
+                    case 'conversation.message.created':
+                        if (type === 'conversations')
+                            handleConversationMessage(resource);
+                        break;
+                    case 'user.contact.deleted':
+                        if (type === 'contacts')
+                            handleUserContactDeleted(resource.id);
+                        break;
+                }
             }
         },
-        [handleChannelMessage, handleConversationMessage]
+        [
+            handleChannelMessage,
+            handleConversationMessage,
+            handleUserContactDeleted,
+        ]
     );
 
     const logMessageOnOpen = (res: Response): void => {
