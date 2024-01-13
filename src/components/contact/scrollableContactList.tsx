@@ -3,8 +3,7 @@ import avatar_default from '../../assets/avatar_default.jpg';
 import Avatar from '../chatlist/avatar';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
-import AsyncDeleteButton from '../button/asyncDeleteButton';
-import AsyncCreateButton from '../button/asyncCreateButton';
+import AsyncRequestButton from '../button/asyncRequestButton';
 
 interface ScrollableContactListProps {
     contacts: IUser[];
@@ -61,20 +60,30 @@ const ScrollableContactList = ({
                             key={contact.id}
                         >
                             {deleteMode && (
-                                <AsyncDeleteButton
-                                    url={`http://localhost:8000/users/${userId}/contacts/${contact.id}`}
-                                    header={{
-                                        Authorization: `Bearer ${token}`,
-                                        mercureAuthorization: `Bearer ${mercureToken}`,
+                                <AsyncRequestButton
+                                    requestParams={{
+                                        url: `http://localhost:8000/users/${userId}/contacts/${contact.id}`,
+                                        header: {
+                                            Authorization: `Bearer ${token}`,
+                                            mercureAuthorization: `Bearer ${mercureToken}`,
+                                        },
+                                        method: 'DELETE',
                                     }}
+                                    mode="delete"
                                 />
                             )}
 
                             {createMode && (
-                                <AsyncCreateButton
-                                    onClick={() => {
-                                        alert('add contact');
+                                <AsyncRequestButton
+                                    requestParams={{
+                                        url: `http://localhost:8000/users/${userId}/contacts/${contact.id}`,
+                                        header: {
+                                            Authorization: `Bearer ${token}`,
+                                            mercureAuthorization: `Bearer ${mercureToken}`,
+                                        },
+                                        method: 'POST',
                                     }}
+                                    mode="create"
                                 />
                             )}
 

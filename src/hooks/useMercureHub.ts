@@ -6,6 +6,7 @@ import {
     fetchEventSource,
 } from '@microsoft/fetch-event-source';
 import { IMessage } from '../interfaces/message/IMessage';
+import { IUser } from '../interfaces/user/IUser';
 
 export default function useMercureHub(): void {
     const mercureToken = useSelector((state: RootState) => state.mercure.token);
@@ -27,13 +28,23 @@ export default function useMercureHub(): void {
     );
 
     const handleConversationMessage = useCallback(
-        (data: IMessage): void => {
+        (message: IMessage): void => {
             dispatch({
                 type: 'conversations/addMessage',
                 payload: {
-                    id: data.conversation_id as number,
-                    message: data,
+                    id: message.conversation_id as number,
+                    message: message,
                 },
+            });
+        },
+        [dispatch]
+    );
+
+    const handleUserContactCreated = useCallback(
+        (contact: IUser): void => {
+            dispatch({
+                type: 'contacts/addContact',
+                payload: { contact: contact },
             });
         },
         [dispatch]
@@ -65,6 +76,10 @@ export default function useMercureHub(): void {
                         if (type === 'conversations')
                             handleConversationMessage(resource);
                         break;
+                    case 'user.contact.created':
+                        if (type === 'contacts')
+                            handleUserContactCreated(resource);
+                        break;
                     case 'user.contact.deleted':
                         if (type === 'contacts')
                             handleUserContactDeleted(resource.id);
@@ -75,6 +90,7 @@ export default function useMercureHub(): void {
         [
             handleChannelMessage,
             handleConversationMessage,
+            handleUserContactCreated,
             handleUserContactDeleted,
         ]
     );
