@@ -103,13 +103,9 @@ export default function Contact(): JSX.Element {
                 console.log('[Contact] updating contact suggestion');
 
                 const updateContactSuggestion = async (): Promise<void> => {
-                    setIsLoading(true);
-
                     await fetchContactSuggestions();
 
                     contactsLength.current = contacts.length;
-
-                    setIsLoading(false);
                 };
 
                 updateContactSuggestion();
