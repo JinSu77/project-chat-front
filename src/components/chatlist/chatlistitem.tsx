@@ -50,7 +50,7 @@ const ChatListItem: React.FC<ChatListItemProps> = ({
                     : undefined;
 
             if (!canal) {
-                return 'unknown';
+                return '';
             }
         }
 
@@ -65,15 +65,15 @@ const ChatListItem: React.FC<ChatListItemProps> = ({
             const minutes = Math.floor(timeDifference / 60000);
 
             if (minutes < 1) {
-                return 'now';
+                return "à l'instant";
             } else if (minutes === 1) {
-                return '1 minute ago';
+                return 'il y a 1 minute';
             } else {
-                return `${minutes} minutes ago`;
+                return `il y a ${minutes} minutes`;
             }
         }
 
-        return 'unknown';
+        return '';
     };
 
     const selectChat = (): void => {

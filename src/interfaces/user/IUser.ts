@@ -7,4 +7,10 @@ export interface IUser {
     firstName: string;
     email: string;
     roles: IRole[];
+    conversations: IUserConversations[];
+}
+
+interface IUserConversations {
+    id: number;
+    type: string;
 }

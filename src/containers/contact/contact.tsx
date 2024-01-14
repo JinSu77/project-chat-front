@@ -69,7 +69,7 @@ export default function Contact(): JSX.Element {
         dispatch({
             type: 'mercure/setTopics',
             payload: {
-                topics: [`/users/${user?.username}${user?.id}/contacts`],
+                topics: [`/users/${user?.username}${user?.id}`],
             },
         });
 

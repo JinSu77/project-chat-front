@@ -10,6 +10,7 @@ export const channelsSlice = createSlice({
     name: 'channels',
     initialState,
     reducers: {
+        resetToDefault: () => initialState,
         addMessage: (
             state,
             action: {
@@ -32,7 +33,6 @@ export const channelsSlice = createSlice({
                 }
             }
         },
-        resetToDefault: () => initialState,
         setChannels: (
             state,
             action: {

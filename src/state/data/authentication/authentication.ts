@@ -18,13 +18,13 @@ export const authenticationSlice = createSlice({
     name: 'authentication',
     initialState,
     reducers: {
+        resetToDefault: () => initialState,
         login: (state, action: PayloadAction<AuthenticationState>) => {
             return {
                 ...state,
                 ...action.payload,
             };
         },
-        resetToDefault: () => initialState,
     },
 });
 

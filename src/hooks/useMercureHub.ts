@@ -7,6 +7,7 @@ import {
 } from '@microsoft/fetch-event-source';
 import { IMessage } from '../interfaces/message/IMessage';
 import { IUser } from '../interfaces/user/IUser';
+import { IConversation } from '../interfaces/conversation/IConversation';
 
 export default function useMercureHub(): void {
     const mercureToken = useSelector((state: RootState) => state.mercure.token);
@@ -21,6 +22,23 @@ export default function useMercureHub(): void {
                 payload: {
                     id: data.channel?.id as number,
                     message: data,
+                },
+            });
+        },
+        [dispatch]
+    );
+
+    const handleConversationCreated = useCallback(
+        (conversation: IConversation) => {
+            dispatch({
+                type: 'conversations/addConversation',
+                payload: { conversation: conversation },
+            });
+
+            dispatch({
+                type: 'mercure/addTopic',
+                payload: {
+                    topic: `/conversations/${conversation.id}`,
                 },
             });
         },
@@ -51,11 +69,25 @@ export default function useMercureHub(): void {
     );
 
     const handleUserContactDeleted = useCallback(
-        (resourceId: number) => {
+        (contact: IUser) => {
             dispatch({
                 type: 'contacts/removeContact',
-                payload: { id: resourceId },
+                payload: { id: contact.id },
             });
+
+            for (const conversation of contact.conversations) {
+                dispatch({
+                    type: 'conversations/removeConversation',
+                    payload: { id: conversation.id },
+                });
+
+                dispatch({
+                    type: 'mercure/removeTopic',
+                    payload: {
+                        topic: `/conversations/${conversation.id}`,
+                    },
+                });
+            }
         },
         [dispatch]
     );
@@ -68,26 +100,31 @@ export default function useMercureHub(): void {
             const resource = JSON.parse(data.resource);
 
             if (resource) {
-                switch (action) {
-                    case 'channel.message.created':
-                        if (type === 'channels') handleChannelMessage(resource);
+                console.log('[useMercureHub] New message received', resource);
+                switch (type) {
+                    case 'channels':
+                        if (action === 'channel.message.created')
+                            handleChannelMessage(resource);
                         break;
-                    case 'conversation.message.created':
-                        if (type === 'conversations')
+                    case 'conversations':
+                        if (action === 'conversation.message.created')
                             handleConversationMessage(resource);
+
+                        if (action === 'user.conversation.created')
+                            handleConversationCreated(resource);
                         break;
-                    case 'user.contact.created':
-                        if (type === 'contacts')
+                    case 'contacts':
+                        if (action === 'user.contact.created')
                             handleUserContactCreated(resource);
-                        break;
-                    case 'user.contact.deleted':
-                        if (type === 'contacts')
-                            handleUserContactDeleted(resource.id);
+
+                        if (action === 'user.contact.deleted')
+                            handleUserContactDeleted(resource);
                         break;
                 }
             }
         },
         [
+            handleConversationCreated,
             handleChannelMessage,
             handleConversationMessage,
             handleUserContactCreated,

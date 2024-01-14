@@ -28,7 +28,7 @@ export default function Conversation(props: ConversationProps): JSX.Element {
             },
         });
 
-        await initializeChatComponentStore(dispatch, token, user?.id);
+        await initializeChatComponentStore(dispatch, token, user);
 
         dispatch({
             type: 'chatComponent/setChatComponentType',
