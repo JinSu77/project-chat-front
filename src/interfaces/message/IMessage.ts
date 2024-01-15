@@ -6,7 +6,9 @@ export interface IMessage {
     user_id: number;
     username: string;
     created_at: Date;
+    updated_at: Date | null;
     received_at: Date | null;
+    delete_at: Date | null;
 }
 
 interface IMessageChannel {
