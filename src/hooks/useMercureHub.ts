@@ -100,7 +100,6 @@ export default function useMercureHub(): void {
             const resource = JSON.parse(data.resource);
 
             if (resource) {
-                console.log('[useMercureHub] New message received', resource);
                 switch (type) {
                     case 'channels':
                         if (action === 'channel.message.created')
